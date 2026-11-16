@@ -1,0 +1,146 @@
+@import "tailwindcss";
+
+@theme {
+  --color-canvas: #fffdf8;
+  --color-ink: #221a12;
+  --color-ink-soft: #3b2d20;
+  --color-muted: #6d5c4a;
+  --color-faint: #a2917d;
+  --color-soft: #f7f1e6;
+  --color-field: #f2e8d7;
+  --color-hairline-soft: #efe5d3;
+  --color-hairline: #e0d2ba;
+  --color-accent: #8f5b12;
+  --color-gold: #c9963f;
+  --color-gold-soft: #efdcb4;
+  --color-espresso: #2c1d12;
+
+  --radius-sm: 16px;
+  --radius-md: 24px;
+
+  --font-sans: var(--font-inter), -apple-system, "Helvetica Neue", Arial,
+    sans-serif;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-canvas);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection {
+    background-color: var(--color-gold-soft);
+    color: var(--color-ink);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-ink);
+    outline-offset: 2px;
+  }
+}
+
+@layer components {
+  .wrap {
+    margin-inline: auto;
+    width: 100%;
+    max-width: 72rem;
+    padding-inline: 1.25rem;
+  }
+
+  @media (min-width: 640px) {
+    .wrap {
+      padding-inline: 2rem;
+    }
+  }
+
+  /* Typography scale — Saans substitute (Inter variable) at 652 / 456 / 300 */
+  .t-display {
+    font-size: clamp(2.75rem, 6.2vw, 5rem);
+    line-height: 1;
+    font-weight: 650;
+    letter-spacing: 0;
+  }
+
+  .t-h1 {
+    font-size: clamp(2.25rem, 4.6vw, 3.5rem);
+    line-height: 1.03;
+    font-weight: 650;
+    letter-spacing: 0;
+  }
+
+  .t-h2 {
+    font-size: clamp(1.875rem, 3.4vw, 2.75rem);
+    line-height: 1.13;
+    font-weight: 650;
+    letter-spacing: 0;
+  }
+
+  .t-h3 {
+    font-size: clamp(1.5rem, 2.4vw, 2rem);
+    line-height: 1.13;
+    font-weight: 650;
+    letter-spacing: 0;
+  }
+
+  .t-h4 {
+    font-size: 1.5rem;
+    line-height: 1.25;
+    font-weight: 650;
+    letter-spacing: 0;
+  }
+
+  .t-title {
+    font-size: 1.25rem;
+    line-height: 1.3;
+    font-weight: 600;
+    letter-spacing: 0;
+  }
+
+  .t-lead {
+    font-size: clamp(1.125rem, 1.6vw, 1.25rem);
+    line-height: 1.38;
+    font-weight: 300;
+    letter-spacing: 0;
+  }
+
+  .t-body {
+    font-size: 1rem;
+    line-height: 1.38;
+    font-weight: 450;
+    letter-spacing: 0;
+  }
+
+  .t-sm {
+    font-size: 0.875rem;
+    line-height: 1.43;
+    font-weight: 450;
+    letter-spacing: 0;
+  }
+
+  .t-link {
+    font-size: 1rem;
+    line-height: 1.38;
+    font-weight: 600;
+    letter-spacing: 0;
+  }
+
+  .t-label {
+    font-size: 0.75rem;
+    line-height: 1.33;
+    font-weight: 600;
+    letter-spacing: 0;
+  }
+
+  .t-caption {
+    font-size: 0.75rem;
+    line-height: 1.33;
+    font-weight: 450;
+    letter-spacing: 0;
+  }
+}
