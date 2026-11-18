@@ -16,21 +16,19 @@ import {
 import PageHero, { Breadcrumbs } from "@/components/page-hero";
 import { PillLink, Tag } from "@/components/ui";
 import {
-  articles,
   formatDate,
   formatViews,
-  getArticle,
-  relatedArticles,
-  services,
   site,
   type Block,
 } from "@/lib/content";
+import {
+  getPublicArticle,
+  getPublicArticles,
+  relatedArticles,
+} from "@/lib/data/articles";
+import { getPublicServices } from "@/lib/data/services";
 
 export const instant = false;
-
-export function generateStaticParams() {
-  return articles.map((article) => ({ slug: article.slug }));
-}
 
 export async function generateMetadata({
   params,
@@ -38,7 +36,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const article = getArticle(slug);
+  const article = await getPublicArticle(slug);
   if (!article) return { title: "Berita tidak ditemukan" };
   return {
     title: article.title,
@@ -79,10 +77,14 @@ export default async function ArticlePage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const article = getArticle(slug);
+  const [article, articles, services] = await Promise.all([
+    getPublicArticle(slug),
+    getPublicArticles(),
+    getPublicServices(),
+  ]);
   if (!article) notFound();
 
-  const related = relatedArticles(article, 3);
+  const related = relatedArticles(articles, article, 3);
   const shareUrl = `https://kemenhajpare.go.id/berita/${article.slug}`;
   const shareText = encodeURIComponent(article.title);
 
@@ -109,7 +111,7 @@ export default async function ArticlePage({
           </PillLink>
         }
       >
-        <div className="t-caption mt-8 flex flex-wrap items-center gap-x-4 gap-y-2 text-muted">
+        <div className="t-caption mt-8 flex flex-wrap items-center gap-x-4 gap-y-2 text-subtle">
           <span className="font-semibold text-ink">{article.author}</span>
           <span className="inline-flex items-center gap-1.5">
             <Calendar className="size-3.5" />
@@ -132,7 +134,7 @@ export default async function ArticlePage({
             src={article.image}
             alt={article.title}
             fill
-            priority
+            preload
             sizes="(min-width: 1152px) 1088px, 100vw"
             className="object-cover"
           />
@@ -146,7 +148,7 @@ export default async function ArticlePage({
           ))}
 
           <div className="mt-12 flex flex-wrap items-center gap-2 border-t border-hairline-soft pt-6">
-            <span className="t-caption mr-2 text-muted">Bagikan:</span>
+            <span className="t-caption mr-2 text-subtle">Bagikan:</span>
             <a
               href={`https://wa.me/?text=${shareText}%20${encodeURIComponent(shareUrl)}`}
               target="_blank"
@@ -177,7 +179,7 @@ export default async function ArticlePage({
 
         <aside className="flex flex-col gap-3 lg:sticky lg:top-28 lg:self-start">
           <div className="rounded-[24px] bg-soft p-6">
-            <p className="t-label text-muted">Persyaratan layanan</p>
+            <p className="t-label text-subtle">Persyaratan layanan</p>
             <p className="t-title mt-3">
               Siapkan dokumen sebelum datang ke kantor.
             </p>
@@ -189,12 +191,12 @@ export default async function ArticlePage({
                     className="group flex items-center justify-between gap-3 rounded-[16px] bg-canvas px-4 py-3"
                   >
                     <span className="flex items-center gap-2.5">
-                      <FileText className="size-4 text-muted" />
+                      <FileText className="size-4 text-subtle" />
                       <span className="t-sm font-semibold">
                         {service.shortName}
                       </span>
                     </span>
-                    <ArrowUpRight className="size-3.5 text-muted group-hover:text-ink" />
+                    <ArrowUpRight className="size-3.5 text-subtle group-hover:text-ink" />
                   </Link>
                 </li>
               ))}
@@ -211,8 +213,8 @@ export default async function ArticlePage({
           </div>
 
           <div className="rounded-[24px] border border-hairline-soft p-6">
-            <p className="t-label text-muted">Butuh bantuan?</p>
-            <p className="t-body mt-3 text-muted">
+            <p className="t-label text-subtle">Butuh bantuan?</p>
+            <p className="t-body mt-3 text-subtle">
               Hubungi loket terpadu pada jam layanan.
             </p>
             <a
@@ -222,7 +224,7 @@ export default async function ArticlePage({
               <Phone className="size-4" />
               {site.phone}
             </a>
-            <p className="t-caption mt-2 text-muted">{site.hours}</p>
+            <p className="t-caption mt-2 text-subtle">{site.hours}</p>
           </div>
         </aside>
       </div>

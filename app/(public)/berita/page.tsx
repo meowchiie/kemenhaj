@@ -5,7 +5,8 @@ import { ArticleCard, ArticleCardFeatured } from "@/components/article-card";
 import { ChevronLeft, ChevronRight } from "@/components/icons";
 import PageBanner from "@/components/page-banner";
 import { PillLink } from "@/components/ui";
-import { articles, categories } from "@/lib/content";
+import { categories } from "@/lib/content";
+import { getPublicArticles } from "@/lib/data/articles";
 
 export const metadata = {
   title: "Berita",
@@ -49,6 +50,7 @@ async function BeritaList({
   searchParams: Promise<{ kategori?: string }>;
 }) {
   const { kategori } = await searchParams;
+  const articles = await getPublicArticles();
   const active = categories.find((category) => category.slug === kategori);
   const sorted = [...articles].sort((a, b) => b.date.localeCompare(a.date));
   const list = active
@@ -72,7 +74,7 @@ async function BeritaList({
             </FilterPill>
           ))}
         </div>
-        <p className="t-caption shrink-0 text-muted">
+        <p className="t-caption shrink-0 text-subtle">
           {list.length} berita
           {active ? ` dalam kategori ${active.name}` : " terbit"}
         </p>
@@ -81,7 +83,7 @@ async function BeritaList({
       {list.length === 0 ? (
         <div className="mt-10 rounded-[24px] bg-soft px-6 py-16 text-center">
           <p className="t-h4">Belum ada berita di kategori ini.</p>
-          <p className="t-body mx-auto mt-2 max-w-md text-muted">
+          <p className="t-body mx-auto mt-2 max-w-md text-subtle">
             Coba pilih kategori lain atau lihat seluruh arsip berita.
           </p>
           <div className="mt-6 flex justify-center">
@@ -103,7 +105,7 @@ async function BeritaList({
           ) : null}
 
           <div className="mt-14 flex flex-col items-start justify-between gap-4 border-t border-hairline-soft pt-6 sm:flex-row sm:items-center">
-            <p className="t-caption text-muted">
+            <p className="t-caption text-subtle">
               Menampilkan {list.length} dari {articles.length} berita
             </p>
             <div className="flex items-center gap-1.5">
@@ -147,7 +149,7 @@ function FilterPill({
       className={
         active
           ? "inline-flex h-9 shrink-0 items-center rounded-full bg-canvas px-4 text-[13px] font-semibold text-ink"
-          : "inline-flex h-9 shrink-0 items-center rounded-full px-4 text-[13px] font-semibold text-muted transition-colors hover:text-ink"
+          : "inline-flex h-9 shrink-0 items-center rounded-full px-4 text-[13px] font-semibold text-subtle transition-colors hover:text-ink"
       }
     >
       {children}

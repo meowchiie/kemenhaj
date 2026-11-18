@@ -14,39 +14,47 @@ import {
 import HomeHeroSlider, { type HeroSlide } from "@/components/home-hero-slider";
 import ServiceIcon from "@/components/service-icon";
 import { Eyebrow, IconTile, PillLink, SectionHead, Tag } from "@/components/ui";
+import { formatDate, formatViews, site } from "@/lib/content";
 import {
-  albums,
-  formatDate,
-  formatViews,
   latestArticles,
   popularArticles,
-  services,
-  site,
-} from "@/lib/content";
+  getPublicArticles,
+} from "@/lib/data/articles";
+import { getPublicGalleries } from "@/lib/data/galleries";
+import { getPublicServices } from "@/lib/data/services";
 
-const stats = [
-  { value: "3", label: "Layanan administratif" },
-  { value: "8", label: "Berita terbit" },
-  { value: "6", label: "Album kegiatan" },
-];
+export default async function HomePage() {
+  const [services, articles, albums] = await Promise.all([
+    getPublicServices(),
+    getPublicArticles(),
+    getPublicGalleries(),
+  ]);
 
-export default function HomePage() {
-  const latest = latestArticles(5);
-  const popular = popularArticles(4);
+  const stats = [
+    { value: String(services.length), label: "Layanan administratif" },
+    { value: String(articles.length), label: "Berita terbit" },
+    { value: String(albums.length), label: "Album kegiatan" },
+  ];
+  const latest = latestArticles(articles, 5);
+  const popular = popularArticles(articles, 4);
   const featured = latest[0];
   const feed = latest.slice(1);
   const galleryPreview = albums.slice(0, 3);
   const albumHighlight = albums[1];
 
   const heroSlides: HeroSlide[] = [
-    {
-      eyebrow: "Berita terbaru",
-      title: featured.title,
-      description: featured.excerpt,
-      href: `/berita/${featured.slug}`,
-      cta: "Baca berita",
-      image: featured.image,
-    },
+    ...(featured
+      ? [
+          {
+            eyebrow: "Berita terbaru",
+            title: featured.title,
+            description: featured.excerpt,
+            href: `/berita/${featured.slug}`,
+            cta: "Baca berita",
+            image: featured.image,
+          },
+        ]
+      : []),
     {
       eyebrow: "Layanan",
       title: "Pelimpahan porsi haji",
@@ -56,14 +64,18 @@ export default function HomePage() {
       cta: "Lihat persyaratan",
       image: "/images/galeri-2.jpg",
     },
-    {
-      eyebrow: "Galeri",
-      title: albumHighlight.title,
-      description: albumHighlight.description,
-      href: `/galeri?album=${albumHighlight.slug}`,
-      cta: "Buka album",
-      image: albumHighlight.cover,
-    },
+    ...(albumHighlight
+      ? [
+          {
+            eyebrow: "Galeri",
+            title: albumHighlight.title,
+            description: albumHighlight.description,
+            href: `/galeri?album=${albumHighlight.slug}`,
+            cta: "Buka album",
+            image: albumHighlight.cover,
+          },
+        ]
+      : []),
   ];
 
   return (
@@ -77,7 +89,7 @@ export default function HomePage() {
             <h1 className="t-h1 max-w-2xl text-balance">
               Informasi haji dan umrah, terbuka untuk semua.
             </h1>
-            <p className="t-lead mt-6 max-w-xl text-muted">
+            <p className="t-lead mt-6 max-w-xl text-subtle">
               Persyaratan layanan, berita terkini, profil pejabat, dan
               dokumentasi kegiatan Kantor Kementerian Haji dan Umrah Kota
               Parepare dalam satu tempat.
@@ -92,7 +104,7 @@ export default function HomePage() {
               </PillLink>
             </div>
             <div className="mt-10 flex flex-wrap items-center gap-2">
-              <span className="t-caption text-muted">Sering dicari:</span>
+              <span className="t-caption text-subtle">Sering dicari:</span>
               {services.map((service) => (
                 <Link
                   key={service.slug}
@@ -114,7 +126,7 @@ export default function HomePage() {
           {stats.map((stat) => (
             <div key={stat.label}>
               <p className="t-h2">{stat.value}</p>
-              <p className="t-caption mt-1 text-muted sm:text-sm">
+              <p className="t-caption mt-1 text-subtle sm:text-sm">
                 {stat.label}
               </p>
             </div>
@@ -145,13 +157,13 @@ export default function HomePage() {
                 <IconTile tone="canvas">
                   <ServiceIcon icon={service.icon} className="size-5" />
                 </IconTile>
-                <ArrowUpRight className="size-5 text-muted transition-colors group-hover:text-ink" />
+                <ArrowUpRight className="size-5 text-subtle transition-colors group-hover:text-ink" />
               </div>
               <h3 className="t-h4 mt-8 text-balance">{service.name}</h3>
-              <p className="t-sm mt-2 line-clamp-3 text-muted">
+              <p className="t-sm mt-2 line-clamp-3 text-subtle">
                 {service.description}
               </p>
-              <div className="t-caption mt-6 flex items-center gap-3 border-t border-hairline pt-4 text-muted">
+              <div className="t-caption mt-6 flex items-center gap-3 border-t border-hairline pt-4 text-subtle">
                 <span>{service.requirements.length} dokumen</span>
                 <span className="text-hairline">•</span>
                 <span>{service.steps.length} langkah</span>
@@ -163,6 +175,7 @@ export default function HomePage() {
         </div>
       </section>
 
+      {featured ? (
       <section className="wrap pb-16 sm:pb-24">
         <SectionHead
           eyebrow="Berita"
@@ -197,7 +210,7 @@ export default function HomePage() {
 
           <aside className="flex flex-col gap-3">
             <div className="rounded-[24px] bg-soft p-6">
-              <p className="t-label text-muted">Paling dibaca</p>
+              <p className="t-label text-subtle">Paling dibaca</p>
               <ol className="mt-5 flex flex-col gap-5">
                 {popular.map((article, index) => (
                   <li key={article.slug}>
@@ -212,7 +225,7 @@ export default function HomePage() {
                         <span className="t-sm block font-semibold leading-snug group-hover:underline group-hover:underline-offset-4">
                           {article.title}
                         </span>
-                        <span className="t-caption mt-1 flex items-center gap-1.5 text-muted">
+                        <span className="t-caption mt-1 flex items-center gap-1.5 text-subtle">
                           <Eye className="size-3.5" />
                           {formatViews(article.views)} kali dibaca
                         </span>
@@ -224,9 +237,9 @@ export default function HomePage() {
             </div>
 
             <div className="rounded-[24px] border border-hairline-soft p-6">
-              <p className="t-label text-muted">Loket layanan</p>
+              <p className="t-label text-subtle">Loket layanan</p>
               <p className="t-title mt-3">Senin–Jumat, 08.00–15.00 WITA</p>
-              <div className="t-sm mt-4 flex flex-col gap-3 text-muted">
+              <div className="t-sm mt-4 flex flex-col gap-3 text-subtle">
                 <span className="flex items-start gap-2.5">
                   <MapPin className="mt-0.5 size-4 shrink-0" />
                   {site.address}
@@ -246,7 +259,9 @@ export default function HomePage() {
           </aside>
         </div>
       </section>
+      ) : null}
 
+      {galleryPreview.length > 0 ? (
       <section className="wrap pb-16 sm:pb-24">
         <SectionHead
           eyebrow="Galeri"
@@ -287,26 +302,27 @@ export default function HomePage() {
               <div className="mt-4 flex items-start justify-between gap-3">
                 <div>
                   <h3 className="t-title line-clamp-2">{album.title}</h3>
-                  <p className="t-caption mt-1 flex items-center gap-1.5 text-muted">
+                  <p className="t-caption mt-1 flex items-center gap-1.5 text-subtle">
                     <Calendar className="size-3.5" />
                     {formatDate(album.date)}
                   </p>
                 </div>
-                <ArrowUpRight className="mt-1 size-4 shrink-0 text-muted transition-colors group-hover:text-ink" />
+                <ArrowUpRight className="mt-1 size-4 shrink-0 text-subtle transition-colors group-hover:text-ink" />
               </div>
             </Link>
           ))}
         </div>
       </section>
+      ) : null}
 
       <section className="wrap">
         <div className="grid gap-8 rounded-[24px] bg-soft px-6 py-10 sm:px-10 sm:py-14 lg:grid-cols-[1.4fr_1fr] lg:items-end">
           <div>
-            <p className="t-label text-muted">Bantuan</p>
+            <p className="t-label text-subtle">Bantuan</p>
             <h2 className="t-h2 mt-4 max-w-xl text-balance">
               Belum yakin dokumen apa yang perlu dibawa?
             </h2>
-            <p className="t-body mt-4 max-w-lg text-muted">
+            <p className="t-body mt-4 max-w-lg text-subtle">
               Datang ke loket terpadu atau hubungi petugas pada jam layanan.
               Kami akan memeriksa kelengkapan berkas sebelum Anda mengajukan
               permohonan.
@@ -322,7 +338,7 @@ export default function HomePage() {
             </PillLink>
           </div>
         </div>
-        <div className="t-caption mt-4 flex items-center gap-2 px-2 text-muted">
+        <div className="t-caption mt-4 flex items-center gap-2 px-2 text-subtle">
           <Clock className="size-3.5" />
           Layanan tutup pada hari libur nasional dan cuti bersama.
         </div>

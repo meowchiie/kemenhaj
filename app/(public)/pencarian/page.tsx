@@ -13,14 +13,13 @@ import {
 import PageBanner from "@/components/page-banner";
 import ServiceIcon from "@/components/service-icon";
 import { IconTile, PillLink, Tag } from "@/components/ui";
+import { formatDate, site } from "@/lib/content";
 import {
-  albums,
-  articles,
-  formatDate,
+  getPublicArticles,
   latestArticles,
-  services,
-  site,
-} from "@/lib/content";
+} from "@/lib/data/articles";
+import { getPublicGalleries } from "@/lib/data/galleries";
+import { getPublicServices } from "@/lib/data/services";
 
 export const metadata = {
   title: "Pencarian",
@@ -62,6 +61,11 @@ async function SearchContent({
   searchParams: Promise<{ q?: string }>;
 }) {
   const { q } = await searchParams;
+  const [services, articles, albums] = await Promise.all([
+    getPublicServices(),
+    getPublicArticles(),
+    getPublicGalleries(),
+  ]);
   const query = (q ?? "").trim();
   const needle = query.toLowerCase();
 
@@ -100,7 +104,7 @@ async function SearchContent({
           role="search"
           className="mt-8 flex w-full max-w-xl items-center gap-2 rounded-full bg-soft p-1.5 pl-5"
         >
-          <Search className="size-4 shrink-0 text-muted" />
+          <Search className="size-4 shrink-0 text-subtle" />
           <input
             type="search"
             name="q"
@@ -136,16 +140,16 @@ async function SearchContent({
             <div>
               <div className="flex items-center gap-2">
                 <Tag>Terbaru</Tag>
-                <p className="t-caption text-muted">Berita yang baru terbit</p>
+                <p className="t-caption text-subtle">Berita yang baru terbit</p>
               </div>
               <div className="mt-6 flex flex-col gap-5">
-                {latestArticles(4).map((article) => (
+                {latestArticles(articles, 4).map((article) => (
                   <ArticleRow key={article.slug} article={article} />
                 ))}
               </div>
             </div>
             <div className="rounded-[24px] bg-soft p-6">
-              <p className="t-label text-muted">Jelajahi layanan</p>
+              <p className="t-label text-subtle">Jelajahi layanan</p>
               <ul className="mt-4 flex flex-col gap-2">
                 {services.map((service) => (
                   <li key={service.slug}>
@@ -160,11 +164,11 @@ async function SearchContent({
                         <span className="t-sm block font-semibold">
                           {service.shortName}
                         </span>
-                        <span className="t-caption text-muted">
+                        <span className="t-caption text-subtle">
                           {service.requirements.length} dokumen wajib
                         </span>
                       </span>
-                      <ArrowUpRight className="size-4 text-muted group-hover:text-ink" />
+                      <ArrowUpRight className="size-4 text-subtle group-hover:text-ink" />
                     </Link>
                   </li>
                 ))}
@@ -174,10 +178,10 @@ async function SearchContent({
         ) : total === 0 ? (
           <div className="rounded-[24px] bg-soft px-6 py-16 text-center">
             <div className="mx-auto grid size-14 place-items-center rounded-[30%] bg-canvas">
-              <Search className="size-6 text-muted" />
+              <Search className="size-6 text-subtle" />
             </div>
             <h2 className="t-h3 mt-6">Tidak ada hasil untuk “{query}”.</h2>
-            <p className="t-body mx-auto mt-3 max-w-md text-muted">
+            <p className="t-body mx-auto mt-3 max-w-md text-subtle">
               Coba kata kunci yang lebih singkat, atau hubungi petugas layanan
               jika informasi yang Anda cari belum tersedia.
             </p>
@@ -195,10 +199,10 @@ async function SearchContent({
           <div className="flex flex-col gap-14">
             <div className="flex flex-wrap items-end justify-between gap-4 border-b border-hairline-soft pb-6">
               <div>
-                <p className="t-label text-muted">Hasil pencarian</p>
+                <p className="t-label text-subtle">Hasil pencarian</p>
                 <h2 className="t-h3 mt-2">“{query}”</h2>
               </div>
-              <p className="t-caption text-muted">{total} hasil ditemukan</p>
+              <p className="t-caption text-subtle">{total} hasil ditemukan</p>
             </div>
 
             {matchedServices.length > 0 ? (
@@ -218,10 +222,10 @@ async function SearchContent({
                         <IconTile tone="canvas">
                           <ServiceIcon icon={service.icon} className="size-5" />
                         </IconTile>
-                        <ArrowUpRight className="size-4 text-muted group-hover:text-ink" />
+                        <ArrowUpRight className="size-4 text-subtle group-hover:text-ink" />
                       </div>
                       <h3 className="t-title mt-5">{service.name}</h3>
-                      <p className="t-sm mt-1.5 line-clamp-2 text-muted">
+                      <p className="t-sm mt-1.5 line-clamp-2 text-subtle">
                         {service.description}
                       </p>
                     </Link>
@@ -258,16 +262,16 @@ async function SearchContent({
                       className="group flex items-center gap-4 rounded-[24px] border border-hairline-soft p-4 transition-colors hover:bg-soft"
                     >
                       <div className="grid size-16 shrink-0 place-items-center rounded-[16px] bg-soft">
-                        <Images className="size-5 text-muted" />
+                        <Images className="size-5 text-subtle" />
                       </div>
                       <div className="min-w-0">
                         <p className="t-title truncate">{album.title}</p>
-                        <p className="t-caption mt-1 flex items-center gap-1.5 text-muted">
+                        <p className="t-caption mt-1 flex items-center gap-1.5 text-subtle">
                           <Calendar className="size-3.5" />
                           {formatDate(album.date)} · {album.items.length} media
                         </p>
                       </div>
-                      <ArrowRight className="ml-auto size-4 shrink-0 text-muted group-hover:text-ink" />
+                      <ArrowRight className="ml-auto size-4 shrink-0 text-subtle group-hover:text-ink" />
                     </Link>
                   ))}
                 </div>
