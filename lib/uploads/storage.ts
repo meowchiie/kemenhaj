@@ -1,6 +1,5 @@
 import { createHash, randomUUID } from "node:crypto";
-import { mkdir, readFile, unlink, writeFile } from "node:fs/promises";
-import path from "node:path";
+import { createClient, SupabaseClient } from "@supabase/supabase-js";
 
 export const MAX_PDF_BYTES = 5 * 1024 * 1024;
 export const MAX_IMAGE_BYTES = 2 * 1024 * 1024;
@@ -11,7 +10,7 @@ const imageTypes = {
   webp: "image/webp",
 } as const;
 
-const uploadsDir = path.join(process.cwd(), "storage", "uploads");
+const BUCKET_NAME = "uploads"; 
 
 export class UploadError extends Error {
   constructor(message: string) {
@@ -25,8 +24,28 @@ export type StoredFile = {
   mime: string;
   bytes: number;
   sha256: string;
-  path: string;
+  path: string;       
+  publicUrl?: string; 
 };
+
+// Lazy initialization untuk klien Supabase guna mencegah infinite loading jika env kosong
+let cachedSupabase: SupabaseClient | null = null;
+
+function getSupabaseClient(): SupabaseClient {
+  if (cachedSupabase) return cachedSupabase;
+
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseKey = 
+    process.env.SUPABASE_SERVICE_ROLE_KEY || 
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+  if (!supabaseUrl || !supabaseKey) {
+    throw new UploadError("Konfigurasi Supabase (URL atau Key) belum diatur di environment variables.");
+  }
+
+  cachedSupabase = createClient(supabaseUrl, supabaseKey);
+  return cachedSupabase;
+}
 
 export async function storePdf(file: File): Promise<StoredFile> {
   if (!file || file.size === 0) {
@@ -44,21 +63,34 @@ export async function storePdf(file: File): Promise<StoredFile> {
   }
 
   const sha256 = createHash("sha256").update(buffer).digest("hex");
-  const originalName = path.basename(file.name || "formulir.pdf");
-  const safeName =
-    originalName.replace(/[^\w.-]+/g, "-").slice(-80) || "formulir.pdf";
-  const storedName = `${randomUUID()}-${safeName}`;
+  const originalName = file.name || "formulir.pdf";
+  const safeName = originalName.replace(/[^\w.-]+/g, "-").slice(-80) || "formulir.pdf";
+  const storedName = `pdfs/${randomUUID()}-${safeName}`;
 
-  await mkdir(uploadsDir, { recursive: true });
-  const target = path.join(uploadsDir, storedName);
-  await writeFile(target, buffer);
+  const supabase = getSupabaseClient();
+
+  const { error } = await supabase.storage
+    .from(BUCKET_NAME)
+    .upload(storedName, buffer, {
+      contentType: "application/pdf",
+      upsert: false,
+    });
+
+  if (error) {
+    throw new UploadError(`Gagal mengupload PDF ke cloud: ${error.message}`);
+  }
+
+  const { data: urlData } = supabase.storage
+    .from(BUCKET_NAME)
+    .getPublicUrl(storedName);
 
   return {
     filename: originalName,
     mime: "application/pdf",
     bytes: buffer.byteLength,
     sha256,
-    path: path.relative(process.cwd(), target),
+    path: storedName,
+    publicUrl: urlData.publicUrl,
   };
 }
 
@@ -79,22 +111,36 @@ export async function storeImage(file: File): Promise<StoredFile> {
   }
 
   const sha256 = createHash("sha256").update(buffer).digest("hex");
-  const originalName = path.basename(file.name || `gambar.${extension}`);
+  const originalName = file.name || `gambar.${extension}`;
   const baseName =
-    path.parse(originalName).name.replace(/[^\w.-]+/g, "-").slice(-60) ||
-    "gambar";
-  const storedName = `${randomUUID()}-${baseName}.${extension}`;
+    pathParseName(originalName).replace(/[^\w.-]+/g, "-").slice(-60) || "gambar";
+  const storedName = `images/${randomUUID()}-${baseName}.${extension}`;
+  const mimeType = imageTypes[extension];
 
-  await mkdir(uploadsDir, { recursive: true });
-  const target = path.join(uploadsDir, storedName);
-  await writeFile(target, buffer);
+  const supabase = getSupabaseClient();
+
+  const { error } = await supabase.storage
+    .from(BUCKET_NAME)
+    .upload(storedName, buffer, {
+      contentType: mimeType,
+      upsert: false,
+    });
+
+  if (error) {
+    throw new UploadError(`Gagal mengupload gambar ke cloud: ${error.message}`);
+  }
+
+  const { data: urlData } = supabase.storage
+    .from(BUCKET_NAME)
+    .getPublicUrl(storedName);
 
   return {
     filename: originalName,
-    mime: imageTypes[extension],
+    mime: mimeType,
     bytes: buffer.byteLength,
     sha256,
-    path: path.relative(process.cwd(), target),
+    path: storedName,
+    publicUrl: urlData.publicUrl,
   };
 }
 
@@ -121,24 +167,33 @@ function detectImageExtension(buffer: Buffer): keyof typeof imageTypes | null {
   return null;
 }
 
-export async function readStoredFile(relativePath: string): Promise<Buffer> {
-  const storageRoot = path.join(process.cwd(), "storage");
-  const absolute = path.join(/* turbopackIgnore: true */ process.cwd(), relativePath);
-
-  if (!absolute.startsWith(storageRoot)) {
-    throw new UploadError("Path berkas tidak valid.");
-  }
-
-  return readFile(absolute);
+function pathParseName(filename: string): string {
+  const lastDot = filename.lastIndexOf(".");
+  if (lastDot === -1) return filename;
+  return filename.substring(0, lastDot);
 }
 
-export async function deleteStoredFile(relativePath: string): Promise<void> {
-  const storageRoot = path.join(process.cwd(), "storage");
-  const absolute = path.join(/* turbopackIgnore: true */ process.cwd(), relativePath);
+export async function readStoredFile(storagePath: string): Promise<Buffer> {
+  const supabase = getSupabaseClient();
+  const { data, error } = await supabase.storage
+    .from(BUCKET_NAME)
+    .download(storagePath);
 
-  if (!absolute.startsWith(storageRoot)) return;
+  if (error || !data) {
+    throw new UploadError("Berkas tidak ditemukan di penyimpanan cloud.");
+  }
 
-  await unlink(absolute).catch(() => {});
+  return Buffer.from(await data.arrayBuffer());
+}
+
+export async function deleteStoredFile(storagePath: string): Promise<void> {
+  if (!storagePath) return;
+
+  const supabase = getSupabaseClient();
+  await supabase.storage
+    .from(BUCKET_NAME)
+    .remove([storagePath])
+    .catch(() => {});
 }
 
 export function formatFileSize(bytes: number): string {
