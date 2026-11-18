@@ -28,7 +28,7 @@ const uploadsDir = path.join(process.cwd(), "storage", "uploads");
 
 const accounts = [
   {
-    email: "superadmin@kemenhajpare.go.id",
+    email: "admin@gmail.com",
     name: "Super Admin Kemenhaj",
     role: "superadmin" as const,
   },
