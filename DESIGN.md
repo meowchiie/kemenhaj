@@ -576,8 +576,8 @@ The app overrides the monochrome palette with a warm brown-and-gold scheme. Geom
 | `hairline-soft` / `hairline` | `#efe5d3` / `#e0d2ba` | 1px card outlines and control borders |
 | `ink` | `#221a12` | Deep coffee — headings, body, primary pills, footer |
 | `ink-soft` | `#3b2d20` | Secondary dark |
-| `muted` / `faint` | `#6d5c4a` / `#a2917d` | Supporting copy and placeholders |
-| `accent` | `#8f5b12` | Accessible gold-brown for text-bearing fills (white text passes AA) |
+| `subtle` / `faint` | `#6d5c4a` / `#a2917d` | Supporting copy and placeholders |
+| `signal` | `#8f5b12` | Accessible gold-brown for text-bearing signals (white text passes AA) |
 | `gold` | `#c9963f` | Decorative gold: slider dots, kickers, small rules |
 | `gold-soft` | `#efdcb4` | Hover tint on light pills and text selection |
 | `espresso` | `#2c1d12` | Photo scrims, page banners, hero slider chrome |
@@ -585,6 +585,17 @@ The app overrides the monochrome palette with a warm brown-and-gold scheme. Geom
 - Keep CTAs as `ink` pills. Gold never becomes the primary button fill.
 - Page banners and the hero slider share the `espresso` scrim so white text stays readable over photography.
 - No shadows, no all-caps, no letter-spacing — the rules above still apply.
+- Token names were adjusted so shadcn/ui can own `muted` and `accent`: use `text-subtle` (not `text-muted`) and `bg-signal` (not `bg-accent`) in public-site code.
+
+### Dashboard admin
+
+The internal dashboard (`/admin`) uses the same warm palette, but assembled from shadcn/ui (Base UI) primitives in `components/admin/ui/` instead of the hand-rolled public components.
+
+- `:root` in `app/globals.css` maps shadcn variables onto the project palette: `--background`/`--card` = canvas, `--primary` = ink, `--secondary`/`--muted` = soft, `--accent` = gold-soft, `--destructive` = `#b3261e`, `--border`/`--input` = hairline, `--ring` = gold.
+- There is no dark mode: the `.dark` block was removed.
+- Buttons and sidebar links still use stadium pills (`rounded-full`); destructive actions use the `destructive` variant.
+- Feedback is inline (`Alert`) rather than toast-based, so no toast provider is mounted.
+- The login page reuses the espresso panel treatment from the public hero to keep the two surfaces visually related.
 
 ### Banner and hero slider
 

@@ -6,7 +6,7 @@ export type Crumb = { label: string; href?: string };
 
 export function Breadcrumbs({ items }: { items: Crumb[] }) {
   return (
-    <nav aria-label="Breadcrumb" className="t-caption flex flex-wrap items-center gap-2 text-muted">
+    <nav aria-label="Breadcrumb" className="t-caption flex flex-wrap items-center gap-2 text-subtle">
       <Link href="/" className="transition-colors hover:text-ink">
         Beranda
       </Link>
@@ -57,7 +57,7 @@ export default function PageHero({
           {eyebrow ? <Eyebrow className="mb-5">{eyebrow}</Eyebrow> : null}
           <h1 className="t-h1 max-w-3xl text-balance">{title}</h1>
           {description ? (
-            <p className="t-lead mt-6 max-w-2xl text-muted">{description}</p>
+            <p className="t-lead mt-6 max-w-2xl text-subtle">{description}</p>
           ) : null}
           {actions ? (
             <div className="mt-8 flex flex-wrap items-center gap-2">

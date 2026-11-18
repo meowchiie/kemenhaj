@@ -8,7 +8,7 @@ export default function NotFound() {
       <h1 className="t-h1 mt-6 max-w-xl text-balance">
         Halaman tidak ditemukan.
       </h1>
-      <p className="t-lead mt-4 max-w-md text-muted">
+      <p className="t-lead mt-4 max-w-md text-subtle">
         Tautan yang Anda buka mungkin sudah dipindahkan. Coba kembali ke beranda
         atau telusuri layanan yang tersedia.
       </p>

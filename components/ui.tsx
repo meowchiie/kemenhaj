@@ -86,7 +86,7 @@ export function Tag({
 }) {
   const tones = {
     soft: "bg-soft text-ink",
-    accent: "bg-accent text-canvas",
+    accent: "bg-signal text-canvas",
     overlay: "bg-[rgba(44,30,18,0.6)] text-canvas backdrop-blur-sm",
   } as const;
 
@@ -111,7 +111,7 @@ export function Eyebrow({
   className?: string;
 }) {
   return (
-    <p className={cn("t-label text-muted", className)}>
+    <p className={cn("t-label text-subtle", className)}>
       <span className="mr-2 inline-block size-1.5 rounded-full bg-ink align-middle" />
       {children}
     </p>
@@ -142,7 +142,7 @@ export function SectionHead({
         {eyebrow ? <Eyebrow className="mb-4">{eyebrow}</Eyebrow> : null}
         <h2 className="t-h2 text-balance">{title}</h2>
         {description ? (
-          <p className="t-body mt-4 text-muted">{description}</p>
+          <p className="t-body mt-4 text-subtle">{description}</p>
         ) : null}
       </div>
       {action ? <div className="shrink-0">{action}</div> : null}

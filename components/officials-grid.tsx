@@ -88,19 +88,19 @@ export default function OfficialsGrid({ officials }: { officials: Official[] }) 
               />
             </div>
 
-            <p className="t-label mt-5 text-muted">{selected.unit}</p>
+            <p className="t-label mt-5 text-subtle">{selected.unit}</p>
             <h2 id="profil-pejabat-judul" className="t-h4 mt-2 pr-10">
               {selected.name}
             </h2>
-            <p className="t-sm mt-1 text-muted">{selected.position}</p>
+            <p className="t-sm mt-1 text-subtle">{selected.position}</p>
 
             <dl className="mt-5 flex flex-col border-t border-hairline-soft">
               <div className="flex items-start justify-between gap-4 border-b border-hairline-soft py-3">
-                <dt className="t-sm text-muted">NIP</dt>
+                <dt className="t-sm text-subtle">NIP</dt>
                 <dd className="t-sm text-right font-semibold">{selected.nip}</dd>
               </div>
               <div className="py-3">
-                <dt className="t-sm text-muted">Tugas pokok</dt>
+                <dt className="t-sm text-subtle">Tugas pokok</dt>
                 <dd className="t-sm mt-1.5 leading-[1.6] text-ink-soft">
                   {selected.duties}
                 </dd>

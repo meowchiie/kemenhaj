@@ -71,7 +71,7 @@ export default function GalleryBrowser({
             className={
               year === "all"
                 ? "inline-flex h-9 shrink-0 items-center rounded-full bg-canvas px-4 text-[13px] font-semibold text-ink"
-                : "inline-flex h-9 shrink-0 items-center rounded-full px-4 text-[13px] font-semibold text-muted transition-colors hover:text-ink"
+                : "inline-flex h-9 shrink-0 items-center rounded-full px-4 text-[13px] font-semibold text-subtle transition-colors hover:text-ink"
             }
           >
             Semua tahun
@@ -84,14 +84,14 @@ export default function GalleryBrowser({
               className={
                 year === item
                   ? "inline-flex h-9 shrink-0 items-center rounded-full bg-canvas px-4 text-[13px] font-semibold text-ink"
-                  : "inline-flex h-9 shrink-0 items-center rounded-full px-4 text-[13px] font-semibold text-muted transition-colors hover:text-ink"
+                  : "inline-flex h-9 shrink-0 items-center rounded-full px-4 text-[13px] font-semibold text-subtle transition-colors hover:text-ink"
               }
             >
               {item}
             </button>
           ))}
         </div>
-        <p className="t-caption shrink-0 text-muted">
+        <p className="t-caption shrink-0 text-subtle">
           {visible.length} album ·{" "}
           {visible.reduce((total, album) => total + album.items.length, 0)} media
         </p>
@@ -126,11 +126,11 @@ export default function GalleryBrowser({
             <h2 className="t-title mt-4 decoration-1 underline-offset-4 group-hover:underline">
               {album.title}
             </h2>
-            <p className="t-caption mt-1 flex items-center gap-1.5 text-muted">
+            <p className="t-caption mt-1 flex items-center gap-1.5 text-subtle">
               <Calendar className="size-3.5" />
               {formatDate(album.date)}
             </p>
-            <p className="t-sm mt-2 line-clamp-2 text-muted">{album.description}</p>
+            <p className="t-sm mt-2 line-clamp-2 text-subtle">{album.description}</p>
           </button>
         ))}
       </div>

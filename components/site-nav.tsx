@@ -44,7 +44,7 @@ export default function SiteNav() {
                   "rounded-full px-3.5 py-2 text-[15px] font-semibold transition-colors",
                   active
                     ? "bg-canvas text-ink"
-                    : "text-muted hover:text-ink",
+                    : "text-subtle hover:text-ink",
                 )}
               >
                 {link.label}
@@ -59,7 +59,7 @@ export default function SiteNav() {
             className="hidden items-center gap-2 rounded-full bg-canvas px-3.5 py-2 md:flex"
             role="search"
           >
-            <Search className="size-4 text-muted" />
+            <Search className="size-4 text-subtle" />
             <input
               type="search"
               name="q"
@@ -109,7 +109,7 @@ export default function SiteNav() {
                   "rounded-full px-4 py-3 text-[15px] font-semibold",
                   isActive(pathname, link.href)
                     ? "bg-soft text-ink"
-                    : "text-muted",
+                    : "text-subtle",
                 )}
               >
                 {link.label}
@@ -121,7 +121,7 @@ export default function SiteNav() {
             role="search"
             className="mt-2 flex items-center gap-2 rounded-full bg-field px-4 py-3"
           >
-            <Search className="size-4 text-muted" />
+            <Search className="size-4 text-subtle" />
             <input
               type="search"
               name="q"

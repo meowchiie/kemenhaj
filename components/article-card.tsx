@@ -27,7 +27,7 @@ export function ArticleCard({
         </span>
       </div>
       <div className="mt-4 flex flex-col gap-2">
-        <p className="t-caption flex items-center gap-2 text-muted">
+        <p className="t-caption flex items-center gap-2 text-subtle">
           <Calendar className="size-3.5" />
           {formatDate(article.date)}
           <span className="text-hairline">•</span>
@@ -36,7 +36,7 @@ export function ArticleCard({
         <h3 className="t-title text-balance decoration-1 underline-offset-4 group-hover:underline">
           {article.title}
         </h3>
-        <p className="t-sm line-clamp-2 text-muted">{article.excerpt}</p>
+        <p className="t-sm line-clamp-2 text-subtle">{article.excerpt}</p>
       </div>
     </Link>
   );
@@ -64,8 +64,8 @@ export function ArticleCardFeatured({ article }: { article: Article }) {
           <Tag>Pilihan editor</Tag>
         </div>
         <h2 className="t-h3 text-balance">{article.title}</h2>
-        <p className="t-body line-clamp-3 text-muted">{article.excerpt}</p>
-        <div className="t-caption flex flex-wrap items-center gap-x-3 gap-y-1 text-muted">
+        <p className="t-body line-clamp-3 text-subtle">{article.excerpt}</p>
+        <div className="t-caption flex flex-wrap items-center gap-x-3 gap-y-1 text-subtle">
           <span>{article.author}</span>
           <span className="text-hairline">•</span>
           <span>{formatDate(article.date)}</span>
@@ -101,7 +101,7 @@ export function ArticleRow({ article }: { article: Article }) {
         />
       </div>
       <div className="min-w-0">
-        <p className="t-caption flex flex-wrap items-center gap-2 text-muted">
+        <p className="t-caption flex flex-wrap items-center gap-2 text-subtle">
           <span className="font-semibold text-ink">{article.category}</span>
           <span className="text-hairline">•</span>
           <span className="inline-flex items-center gap-1">
@@ -114,7 +114,7 @@ export function ArticleRow({ article }: { article: Article }) {
         <h3 className="t-title mt-1.5 line-clamp-2 decoration-1 underline-offset-4 group-hover:underline">
           {article.title}
         </h3>
-        <p className="t-sm mt-1.5 line-clamp-1 text-muted">{article.excerpt}</p>
+        <p className="t-sm mt-1.5 line-clamp-1 text-subtle">{article.excerpt}</p>
       </div>
     </Link>
   );

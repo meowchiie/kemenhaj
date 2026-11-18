@@ -1,0 +1,21 @@
+services:
+  db:
+    image: postgres:17-alpine
+    container_name: kemenhaj-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: kemenhaj
+      POSTGRES_PASSWORD: kemenhaj
+      POSTGRES_DB: kemenhaj
+    ports:
+      - "5432:5432"
+    volumes:
+      - kemenhaj-pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U kemenhaj -d kemenhaj"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  kemenhaj-pgdata:

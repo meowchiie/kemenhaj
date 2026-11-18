@@ -18,6 +18,7 @@ import {
 import { Badge } from "@/components/admin/ui/badge";
 import { Button } from "@/components/admin/ui/button";
 import { Separator } from "@/components/admin/ui/separator";
+import { LogoMark } from "@/components/logo";
 import type { SessionUser } from "@/lib/auth/session";
 import { logoutAction } from "@/app/admin/login/actions";
 import { cn } from "@/lib/utils";
@@ -82,9 +83,7 @@ export default function AdminShell({
         onClick={() => setOpen(false)}
         className="flex items-center gap-2.5 px-1"
       >
-        <span className="grid size-9 place-items-center rounded-[30%] bg-ink text-canvas">
-          <span className="text-sm font-bold">K</span>
-        </span>
+        <LogoMark className="size-10 shrink-0" />
         <span>
           <span className="block text-sm font-semibold leading-tight">
             Kemenhaj Pare

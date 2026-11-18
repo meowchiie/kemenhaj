@@ -12,7 +12,8 @@ import {
 import PageBanner from "@/components/page-banner";
 import ServiceIcon from "@/components/service-icon";
 import { IconTile, PillLink, SectionHead, Tag } from "@/components/ui";
-import { services, site } from "@/lib/content";
+import { site } from "@/lib/content";
+import { getPublicServices } from "@/lib/data/services";
 
 export const metadata = {
   title: "Layanan",
@@ -48,7 +49,9 @@ const faqs = [
   },
 ];
 
-export default function LayananPage() {
+export default async function LayananPage() {
+  const services = await getPublicServices();
+
   return (
     <>
       <PageBanner
@@ -71,7 +74,7 @@ export default function LayananPage() {
 
       <section className="wrap pt-6">
         <div className="rounded-[24px] bg-soft px-6 py-6 sm:px-8">
-          <p className="t-label text-muted">Sebelum datang</p>
+          <p className="t-label text-subtle">Sebelum datang</p>
           <ol className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             {[
               "Periksa daftar dokumen",
@@ -98,7 +101,7 @@ export default function LayananPage() {
             </IconTile>
             <div>
               <p className="t-title">Pendaftaran tetap melalui SISKOHAT.</p>
-              <p className="t-sm mt-1 max-w-2xl text-muted">
+              <p className="t-sm mt-1 max-w-2xl text-subtle">
                 Portal ini bukan sistem pendaftaran. Seluruh data porsi jemaah
                 dikelola melalui Sistem Komputerisasi Haji Terpadu Kementerian
                 Agama RI.
@@ -138,17 +141,17 @@ export default function LayananPage() {
                   <h2 className="t-h4">{service.name}</h2>
                   <Tag>{service.duration}</Tag>
                 </div>
-                <p className="t-sm mt-2 max-w-2xl text-muted">
+                <p className="t-sm mt-2 max-w-2xl text-subtle">
                   {service.description}
                 </p>
-                <div className="t-caption mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-muted">
+                <div className="t-caption mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-subtle">
                   <span className="inline-flex items-center gap-1.5">
                     <FileText className="size-3.5" />
                     {service.requirements.length} dokumen wajib
                   </span>
                   <span className="inline-flex items-center gap-1.5">
                     <Download className="size-3.5" />
-                    Formulir PDF tersedia
+                    {service.form ? "Formulir PDF tersedia" : "Formulir menyusul"}
                   </span>
                   <span>{service.cost}</span>
                 </div>
@@ -159,8 +162,9 @@ export default function LayananPage() {
                   <ArrowRight className="size-4" />
                 </PillLink>
                 <a
-                  href={service.form.file}
-                  className="inline-flex h-11 items-center gap-2 rounded-full border border-hairline bg-canvas px-5 text-[15px] font-semibold text-ink transition-colors hover:border-ink"
+                  href={service.form?.href ?? "#"}
+                  aria-disabled={!service.form}
+                  className="inline-flex h-11 items-center gap-2 rounded-full border border-hairline bg-canvas px-5 text-[15px] font-semibold text-ink transition-colors hover:border-ink aria-disabled:pointer-events-none aria-disabled:opacity-50"
                 >
                   <Download className="size-4" />
                   Formulir
@@ -184,9 +188,9 @@ export default function LayananPage() {
             >
               <summary className="t-body flex cursor-pointer list-none items-center justify-between gap-4 font-semibold [&::-webkit-details-marker]:hidden">
                 {faq.question}
-                <ChevronDown className="size-4 shrink-0 text-muted transition-transform group-open:rotate-180" />
+                <ChevronDown className="size-4 shrink-0 text-subtle transition-transform group-open:rotate-180" />
               </summary>
-              <p className="t-sm mt-3 max-w-2xl text-muted">{faq.answer}</p>
+              <p className="t-sm mt-3 max-w-2xl text-subtle">{faq.answer}</p>
             </details>
           ))}
         </div>
@@ -195,11 +199,11 @@ export default function LayananPage() {
       <section className="wrap pb-20">
         <div className="grid gap-8 rounded-[24px] bg-soft px-6 py-10 sm:px-10 sm:py-12 lg:grid-cols-[1.4fr_1fr] lg:items-center">
           <div>
-            <p className="t-label text-muted">Kontak layanan</p>
+            <p className="t-label text-subtle">Kontak layanan</p>
             <h2 className="t-h2 mt-4 max-w-lg text-balance">
               Petugas kami siap memeriksa berkas Anda.
             </h2>
-            <p className="t-body mt-4 max-w-lg text-muted">
+            <p className="t-body mt-4 max-w-lg text-subtle">
               Datang langsung ke loket terpadu atau hubungi kami pada jam
               layanan. Konsultasi awal tidak dipungut biaya.
             </p>
@@ -211,7 +215,7 @@ export default function LayananPage() {
             </PillLink>
             <Link
               href="/profil"
-              className="t-sm inline-flex items-center gap-2 text-muted transition-colors hover:text-ink"
+              className="t-sm inline-flex items-center gap-2 text-subtle transition-colors hover:text-ink"
             >
               <MapPin className="size-4" />
               {site.address}
