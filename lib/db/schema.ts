@@ -14,7 +14,7 @@ import {
 } from "drizzle-orm/pg-core";
 import type { Block } from "@/lib/content";
 
-export const userRole = pgEnum("user_role", ["superadmin", "editor", "staff"]);
+export const userRole = pgEnum("user_role", ["superadmin"]);
 
 export const mediaKind = pgEnum("media_kind", ["pdf", "image"]);
 
@@ -25,7 +25,7 @@ export const users = pgTable(
     email: text("email").notNull(),
     name: text("name").notNull(),
     passwordHash: text("password_hash").notNull(),
-    role: userRole("role").notNull().default("staff"),
+    role: userRole("role").notNull().default("superadmin"),
     isActive: boolean("is_active").notNull().default(true),
     lastLoginAt: timestamp("last_login_at", { withTimezone: true }),
     createdAt: timestamp("created_at", { withTimezone: true })

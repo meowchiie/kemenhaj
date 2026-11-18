@@ -46,7 +46,7 @@ Portal informasi publik Kantor Kementerian Haji dan Umrah Kota Parepare, lengkap
    | --- | --- |
    | `DATABASE_URL` | Koneksi PostgreSQL. Contoh TCP: `postgresql://kemenhaj:kemenhaj@localhost:5432/kemenhaj`. Bisa juga memakai unix socket: `postgresql://damaru@localhost/kemenhaj?host=/var/run/postgresql`. |
    | `SESSION_PASSWORD` | Kunci enkripsi cookie iron-session, **minimal 32 karakter**. Buat dengan `openssl rand -hex 32`. |
-   | `SEED_PASSWORD` | Password awal untuk tiga akun seed. Ganti sebelum produksi. |
+   | `SEED_PASSWORD` | Password awal untuk akun seed. Ganti sebelum produksi. |
 
 4. Jalankan migrasi dan seed.
 
@@ -55,7 +55,7 @@ Portal informasi publik Kantor Kementerian Haji dan Umrah Kota Parepare, lengkap
    npm run db:seed
    ```
 
-   Seed bersifat idempoten: aman dijalankan berulang. Seed membuat 3 akun, 3 layanan, 8 berita, 7 pejabat, dan 6 album contoh. Formulir PDF dan gambar disalin dari `public/` ke `storage/uploads/`.
+   Seed bersifat idempoten: aman dijalankan berulang. Seed membuat 1 akun, 3 layanan, 8 berita, 7 pejabat, dan 6 album contoh. Formulir PDF dan gambar disalin dari `public/` ke `storage/uploads/`.
 
 5. Jalankan server pengembangan.
 
@@ -80,13 +80,13 @@ Portal informasi publik Kantor Kementerian Haji dan Umrah Kota Parepare, lengkap
 
 ## Akun dan peran
 
-Password ketiga akun mengikuti `SEED_PASSWORD`.
+Aplikasi ini hanya memakai satu peran, `superadmin`, dan seed membuat satu akun. Password akun mengikuti `SEED_PASSWORD`.
 
 | Email | Peran | Hak akses |
 | --- | --- | --- |
-| `superadmin@kemenhajpare.go.id` | `superadmin` | Semua: layanan, berita, pejabat, galeri, audit log, dan pengguna (UI menyusul). |
-| `staff@kemenhajpare.go.id` | `staff` | Buat, ubah, hapus layanan, unggah/ganti formulir PDF. |
-| `editor@kemenhajpare.go.id` | `editor` | Buat, ubah, hapus berita; data layanan hanya dapat dibaca. |
+| `superadmin@kemenhajpare.go.id` | `superadmin` | Semua: layanan, berita, pejabat, galeri, audit log, dan profil akun sendiri. |
+
+Nama, email, dan password akun diubah sendiri lewat halaman `/admin/profil`. Tidak ada CRUD pengguna.
 
 Otorisasi tidak hanya di UI: setiap fungsi di `lib/data` memanggil `requirePermission()` sehingga Server Action yang dipalsukan tetap ditolak.
 

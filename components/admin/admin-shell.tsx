@@ -24,8 +24,6 @@ import { cn } from "@/lib/utils";
 
 const roleLabels: Record<SessionUser["role"], string> = {
   superadmin: "Super admin",
-  editor: "Editor",
-  staff: "Staff layanan",
 };
 
 function isActive(pathname: string, href: string): boolean {
@@ -46,16 +44,10 @@ export default function AdminShell({
   const links = [
     { href: "/admin", label: "Ringkasan", icon: LayoutDashboard },
     { href: "/admin/layanan", label: "Layanan", icon: FileText },
-    ...(user.role === "editor" || user.role === "superadmin"
-      ? [{ href: "/admin/berita", label: "Berita", icon: Newspaper }]
-      : []),
-    ...(user.role === "superadmin"
-      ? [
-          { href: "/admin/pejabat", label: "Pejabat", icon: UserRound },
-          { href: "/admin/galeri", label: "Galeri", icon: Images },
-          { href: "/admin/aktivitas", label: "Aktivitas", icon: History },
-        ]
-      : []),
+    { href: "/admin/berita", label: "Berita", icon: Newspaper },
+    { href: "/admin/pejabat", label: "Pejabat", icon: UserRound },
+    { href: "/admin/galeri", label: "Galeri", icon: Images },
+    { href: "/admin/aktivitas", label: "Aktivitas", icon: History },
   ];
 
   const nav = (
@@ -122,17 +114,28 @@ export default function AdminShell({
           <Badge variant="outline" className="mt-2 bg-background">
             {roleLabels[user.role]}
           </Badge>
-          <form action={logoutAction} className="mt-3">
+          <div className="mt-3 flex flex-col gap-2">
             <Button
-              type="submit"
               variant="outline"
               size="sm"
               className="w-full rounded-full"
+              render={<Link href="/admin/profil" />}
             >
-              <LogOut data-icon="inline-start" />
-              Keluar
+              <UserRound data-icon="inline-start" />
+              Profil saya
             </Button>
-          </form>
+            <form action={logoutAction}>
+              <Button
+                type="submit"
+                variant="outline"
+                size="sm"
+                className="w-full rounded-full"
+              >
+                <LogOut data-icon="inline-start" />
+                Keluar
+              </Button>
+            </form>
+          </div>
         </div>
       </div>
     </div>

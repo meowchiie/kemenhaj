@@ -8,7 +8,6 @@ import {
   UserRound,
 } from "lucide-react";
 import AdminPageHeader from "@/components/admin/page-header";
-import { Alert, AlertDescription, AlertTitle } from "@/components/admin/ui/alert";
 import { Badge } from "@/components/admin/ui/badge";
 import { Button } from "@/components/admin/ui/button";
 import {
@@ -18,13 +17,18 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/admin/ui/card";
-import { can, requireUser } from "@/lib/auth/permissions";
+import { requireUser } from "@/lib/auth/permissions";
+import type { SessionUser } from "@/lib/auth/session";
 import { getArticleStats } from "@/lib/data/articles";
 import { listRecentAudit } from "@/lib/data/audit";
 import { getGalleryStats } from "@/lib/data/galleries";
 import { getOfficialStats } from "@/lib/data/officials";
 import { getServiceStats } from "@/lib/data/services";
 import { formatDateTime } from "@/lib/format";
+
+const roleLabels: Record<SessionUser["role"], string> = {
+  superadmin: "Super admin",
+};
 
 const actionLabels: Record<string, string> = {
   "auth.login": "Masuk dashboard",
@@ -52,19 +56,12 @@ export const instant = false;
 
 export default async function DashboardPage() {
   const user = await requireUser();
-  const emptyStats = { total: 0, published: 0, active: 0 };
   const [services, articles, officials, galleries, recent] = await Promise.all([
     getServiceStats(),
-    can(user, "articles:read")
-      ? getArticleStats()
-      : Promise.resolve(emptyStats),
-    can(user, "officials:read")
-      ? getOfficialStats()
-      : Promise.resolve(emptyStats),
-    can(user, "galleries:read")
-      ? getGalleryStats()
-      : Promise.resolve(emptyStats),
-    can(user, "audit:read") ? listRecentAudit(6) : Promise.resolve([]),
+    getArticleStats(),
+    getOfficialStats(),
+    getGalleryStats(),
+    listRecentAudit(6),
   ]);
 
   const cards = [
@@ -74,36 +71,24 @@ export default async function DashboardPage() {
       description: `dari ${services.total} layanan terdaftar`,
       icon: FileText,
     },
-    ...(can(user, "articles:read")
-      ? [
-          {
-            label: "Berita terbit",
-            value: articles.published,
-            description: `dari ${articles.total} berita tersimpan`,
-            icon: Newspaper,
-          },
-        ]
-      : []),
-    ...(can(user, "officials:read")
-      ? [
-          {
-            label: "Pejabat aktif",
-            value: officials.active,
-            description: `dari ${officials.total} pejabat terdaftar`,
-            icon: UserRound,
-          },
-        ]
-      : []),
-    ...(can(user, "galleries:read")
-      ? [
-          {
-            label: "Album terbit",
-            value: galleries.published,
-            description: `dari ${galleries.total} album tersimpan`,
-            icon: Images,
-          },
-        ]
-      : []),
+    {
+      label: "Berita terbit",
+      value: articles.published,
+      description: `dari ${articles.total} berita tersimpan`,
+      icon: Newspaper,
+    },
+    {
+      label: "Pejabat aktif",
+      value: officials.active,
+      description: `dari ${officials.total} pejabat terdaftar`,
+      icon: UserRound,
+    },
+    {
+      label: "Album terbit",
+      value: galleries.published,
+      description: `dari ${galleries.total} album tersimpan`,
+      icon: Images,
+    },
   ];
 
   return (
@@ -113,43 +98,15 @@ export default async function DashboardPage() {
         title={`Selamat datang, ${user.name.split(" ")[0]}.`}
         description="Pantau status informasi layanan dan perubahan terakhir di portal publik."
         actions={
-          user.role === "editor" ? (
-            <Button
-              render={<Link href="/admin/berita" />}
-              className="rounded-full"
-            >
-              Kelola berita
-              <ArrowUpRight data-icon="inline-end" />
-            </Button>
-          ) : can(user, "services:write") ? (
-            <Button
-              render={<Link href="/admin/layanan" />}
-              className="rounded-full"
-            >
-              Kelola layanan
-              <ArrowUpRight data-icon="inline-end" />
-            </Button>
-          ) : (
-            <Button
-              variant="outline"
-              render={<Link href="/admin/layanan" />}
-              className="rounded-full"
-            >
-              Lihat layanan
-            </Button>
-          )
+          <Button
+            render={<Link href="/admin/layanan" />}
+            className="rounded-full"
+          >
+            Kelola layanan
+            <ArrowUpRight data-icon="inline-end" />
+          </Button>
         }
       />
-
-      {user.role === "editor" ? (
-        <Alert className="mb-6">
-          <AlertTitle>Editor berita</AlertTitle>
-          <AlertDescription>
-            Anda dapat membuat, mengubah, dan menghapus berita. Data layanan
-            hanya dapat dilihat.
-          </AlertDescription>
-        </Alert>
-      ) : null}
 
       <div className="grid gap-4 sm:grid-cols-2">
         {cards.map((card) => {
@@ -189,9 +146,7 @@ export default async function DashboardPage() {
           <CardContent>
             {recent.length === 0 ? (
               <p className="text-sm text-muted-foreground">
-                {can(user, "audit:read")
-                  ? "Belum ada aktivitas tercatat."
-                  : "Aktivitas hanya dapat dilihat oleh super admin."}
+                Belum ada aktivitas tercatat.
               </p>
             ) : (
               <ul className="flex flex-col gap-3">
@@ -216,7 +171,7 @@ export default async function DashboardPage() {
           <CardHeader>
             <CardTitle className="text-base">Pintasan</CardTitle>
             <CardDescription>
-              Tugas yang paling sering dilakukan staff layanan.
+              Tugas yang paling sering dilakukan.
             </CardDescription>
           </CardHeader>
           <CardContent className="flex flex-col gap-2">
@@ -228,46 +183,38 @@ export default async function DashboardPage() {
               Daftar layanan
               <ArrowUpRight data-icon="inline-end" />
             </Button>
-            {can(user, "articles:read") ? (
-              <Button
-                variant="outline"
-                className="justify-between rounded-full"
-                render={<Link href="/admin/berita" />}
-              >
-                Daftar berita
-                <ArrowUpRight data-icon="inline-end" />
-              </Button>
-            ) : null}
-            {can(user, "officials:read") ? (
-              <Button
-                variant="outline"
-                className="justify-between rounded-full"
-                render={<Link href="/admin/pejabat" />}
-              >
-                Daftar pejabat
-                <ArrowUpRight data-icon="inline-end" />
-              </Button>
-            ) : null}
-            {can(user, "galleries:read") ? (
-              <Button
-                variant="outline"
-                className="justify-between rounded-full"
-                render={<Link href="/admin/galeri" />}
-              >
-                Daftar album
-                <ArrowUpRight data-icon="inline-end" />
-              </Button>
-            ) : null}
-            {can(user, "audit:read") ? (
-              <Button
-                variant="outline"
-                className="justify-between rounded-full"
-                render={<Link href="/admin/aktivitas" />}
-              >
-                Audit log
-                <ArrowUpRight data-icon="inline-end" />
-              </Button>
-            ) : null}
+            <Button
+              variant="outline"
+              className="justify-between rounded-full"
+              render={<Link href="/admin/berita" />}
+            >
+              Daftar berita
+              <ArrowUpRight data-icon="inline-end" />
+            </Button>
+            <Button
+              variant="outline"
+              className="justify-between rounded-full"
+              render={<Link href="/admin/pejabat" />}
+            >
+              Daftar pejabat
+              <ArrowUpRight data-icon="inline-end" />
+            </Button>
+            <Button
+              variant="outline"
+              className="justify-between rounded-full"
+              render={<Link href="/admin/galeri" />}
+            >
+              Daftar album
+              <ArrowUpRight data-icon="inline-end" />
+            </Button>
+            <Button
+              variant="outline"
+              className="justify-between rounded-full"
+              render={<Link href="/admin/aktivitas" />}
+            >
+              Audit log
+              <ArrowUpRight data-icon="inline-end" />
+            </Button>
             <Button
               variant="outline"
               className="justify-between rounded-full"
@@ -279,11 +226,7 @@ export default async function DashboardPage() {
             <div className="mt-2 rounded-xl bg-muted p-3">
               <p className="text-xs font-semibold">Peran Anda</p>
               <Badge variant="secondary" className="mt-1.5">
-                {user.role === "superadmin"
-                  ? "Super admin"
-                  : user.role === "staff"
-                    ? "Staff layanan"
-                    : "Editor"}
+                {roleLabels[user.role]}
               </Badge>
             </div>
           </CardContent>

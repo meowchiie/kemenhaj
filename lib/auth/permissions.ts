@@ -14,8 +14,7 @@ export type Permission =
   | "galleries:read"
   | "galleries:write"
   | "galleries:delete"
-  | "audit:read"
-  | "users:manage";
+  | "audit:read";
 
 const matrix: Record<SessionUser["role"], Permission[]> = {
   superadmin: [
@@ -32,15 +31,7 @@ const matrix: Record<SessionUser["role"], Permission[]> = {
     "galleries:write",
     "galleries:delete",
     "audit:read",
-    "users:manage",
   ],
-  editor: [
-    "services:read",
-    "articles:read",
-    "articles:write",
-    "articles:delete",
-  ],
-  staff: ["services:read", "services:write", "services:delete"],
 };
 
 export class AuthorizationError extends Error {

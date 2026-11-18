@@ -32,16 +32,6 @@ const accounts = [
     name: "Super Admin Kemenhaj",
     role: "superadmin" as const,
   },
-  {
-    email: "staff@kemenhajpare.go.id",
-    name: "Staff Layanan",
-    role: "staff" as const,
-  },
-  {
-    email: "editor@kemenhajpare.go.id",
-    name: "Editor Berita",
-    role: "editor" as const,
-  },
 ];
 
 async function seedUsers() {

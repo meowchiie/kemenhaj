@@ -226,7 +226,7 @@ sequenceDiagram
 *   `username` (VARCHAR(50), UNIQUE, NOT NULL)
 *   `email` (VARCHAR(100), UNIQUE, NOT NULL)
 *   `password_hash` (VARCHAR(255), NOT NULL)
-*   `role` (VARCHAR(20), NOT NULL) -- 'superadmin', 'editor', 'staff'
+*   `role` (VARCHAR(20), NOT NULL) -- hanya 'superadmin'
 *   `created_at` (TIMESTAMPTZ, DEFAULT NOW())
 *   `updated_at` (TIMESTAMPTZ, DEFAULT NOW())
 
