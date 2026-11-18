@@ -1,11 +1,11 @@
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import AdminPageHeader from "@/components/admin/page-header";
 import DeleteOfficialButton from "@/components/admin/delete-official-button";
 import OfficialForm from "@/components/admin/official-form";
 import OfficialPhotoCard from "@/components/admin/official-photo-card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/admin/ui/alert";
 import { Badge } from "@/components/admin/ui/badge";
-import { requireUser } from "@/lib/auth/permissions";
+import { can, requireUser } from "@/lib/auth/permissions";
 import { getAdminOfficial } from "@/lib/data/officials";
 
 export const instant = false;
@@ -17,7 +17,12 @@ export default async function EditOfficialPage({
   params: Promise<{ id: string }>;
   searchParams: Promise<{ status?: string }>;
 }) {
-  await requireUser();
+  const user = await requireUser();
+
+  if (!can(user, "officials:write")) {
+    redirect("/admin");
+  }
+
   const { id } = await params;
   const official = await getAdminOfficial(id);
 

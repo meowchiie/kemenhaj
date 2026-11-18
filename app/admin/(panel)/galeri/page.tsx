@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { ArrowUpRight, Images, Plus } from "lucide-react";
 import AdminPageHeader from "@/components/admin/page-header";
 import { Alert, AlertDescription, AlertTitle } from "@/components/admin/ui/alert";
@@ -13,7 +14,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/admin/ui/table";
-import { requireUser } from "@/lib/auth/permissions";
+import { can, requireUser } from "@/lib/auth/permissions";
 import { listAdminGalleries } from "@/lib/data/galleries";
 import { formatDate } from "@/lib/format";
 
@@ -45,7 +46,12 @@ export default async function AdminGalleriesPage({
 }: {
   searchParams: Promise<{ status?: string }>;
 }) {
-  await requireUser();
+  const user = await requireUser();
+
+  if (!can(user, "galleries:read")) {
+    redirect("/admin");
+  }
+
   const galleries = await listAdminGalleries();
   const { status } = await searchParams;
   const notice = status ? statusMessages[status] : undefined;

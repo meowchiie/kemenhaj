@@ -1,4 +1,4 @@
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import AdminPageHeader from "@/components/admin/page-header";
 import DeleteGalleryButton from "@/components/admin/delete-gallery-button";
 import GalleryCoverCard from "@/components/admin/gallery-cover-card";
@@ -6,7 +6,7 @@ import GalleryForm from "@/components/admin/gallery-form";
 import GalleryItemsCard from "@/components/admin/gallery-items-card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/admin/ui/alert";
 import { Badge } from "@/components/admin/ui/badge";
-import { requireUser } from "@/lib/auth/permissions";
+import { can, requireUser } from "@/lib/auth/permissions";
 import { getAdminGallery } from "@/lib/data/galleries";
 
 export const instant = false;
@@ -18,7 +18,12 @@ export default async function EditGalleryPage({
   params: Promise<{ id: string }>;
   searchParams: Promise<{ status?: string }>;
 }) {
-  await requireUser();
+  const user = await requireUser();
+
+  if (!can(user, "galleries:write")) {
+    redirect("/admin");
+  }
+
   const { id } = await params;
   const gallery = await getAdminGallery(id);
 

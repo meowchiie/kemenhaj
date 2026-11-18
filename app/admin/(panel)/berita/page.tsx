@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { ArrowUpRight, Newspaper, Plus } from "lucide-react";
 import AdminPageHeader from "@/components/admin/page-header";
 import { Alert, AlertDescription, AlertTitle } from "@/components/admin/ui/alert";
@@ -46,6 +47,11 @@ export default async function AdminArticlesPage({
   searchParams: Promise<{ status?: string }>;
 }) {
   const user = await requireUser();
+
+  if (!can(user, "articles:read")) {
+    redirect("/admin");
+  }
+
   const articles = await listAdminArticles();
   const { status } = await searchParams;
   const notice = status ? statusMessages[status] : undefined;

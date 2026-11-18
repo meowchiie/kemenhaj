@@ -19,13 +19,15 @@ export default async function EditArticlePage({
   searchParams: Promise<{ status?: string }>;
 }) {
   const user = await requireUser();
+
+  if (!can(user, "articles:write")) {
+    redirect("/admin/berita?status=ditolak");
+  }
+
   const { id } = await params;
   const article = await getAdminArticle(id);
 
   if (!article) notFound();
-  if (!can(user, "articles:write")) {
-    redirect("/admin/berita?status=ditolak");
-  }
 
   const { status } = await searchParams;
 

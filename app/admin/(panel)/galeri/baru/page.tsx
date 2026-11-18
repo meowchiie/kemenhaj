@@ -1,12 +1,17 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import AdminPageHeader from "@/components/admin/page-header";
 import GalleryForm from "@/components/admin/gallery-form";
-import { requireUser } from "@/lib/auth/permissions";
+import { can, requireUser } from "@/lib/auth/permissions";
 
 export const instant = false;
 
 export default async function NewGalleryPage() {
-  await requireUser();
+  const user = await requireUser();
+
+  if (!can(user, "galleries:write")) {
+    redirect("/admin");
+  }
 
   return (
     <>

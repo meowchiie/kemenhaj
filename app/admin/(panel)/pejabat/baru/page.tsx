@@ -1,12 +1,17 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import AdminPageHeader from "@/components/admin/page-header";
 import OfficialForm from "@/components/admin/official-form";
-import { requireUser } from "@/lib/auth/permissions";
+import { can, requireUser } from "@/lib/auth/permissions";
 
 export const instant = false;
 
 export default async function NewOfficialPage() {
-  await requireUser();
+  const user = await requireUser();
+
+  if (!can(user, "officials:write")) {
+    redirect("/admin");
+  }
 
   return (
     <>
