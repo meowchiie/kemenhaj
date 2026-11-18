@@ -3,7 +3,7 @@ import { ArrowUpRight, Images } from "@/components/icons";
 import GalleryBrowser from "@/components/gallery-browser";
 import PageBanner from "@/components/page-banner";
 import { PillLink } from "@/components/ui";
-import { albums } from "@/lib/content";
+import { getPublicGalleries } from "@/lib/data/galleries";
 
 export const metadata = {
   title: "Galeri",
@@ -11,11 +11,13 @@ export const metadata = {
     "Dokumentasi foto dan video kegiatan pelayanan haji dan umrah Kantor Kementerian Haji dan Umrah Kota Parepare.",
 };
 
-export default function GaleriPage({
+export default async function GaleriPage({
   searchParams,
 }: {
   searchParams: Promise<{ album?: string }>;
 }) {
+  const albums = await getPublicGalleries();
+
   return (
     <>
       <PageBanner
@@ -41,9 +43,9 @@ export default function GaleriPage({
         <Suspense
           fallback={<div className="h-96 animate-pulse rounded-[24px] bg-soft" />}
         >
-          <GalleryContent searchParams={searchParams} />
+          <GalleryContent searchParams={searchParams} albums={albums} />
         </Suspense>
-        <p className="t-caption mt-10 max-w-2xl text-muted">
+        <p className="t-caption mt-10 max-w-2xl text-subtle">
           Seluruh dokumentasi dipublikasikan untuk kebutuhan transparansi dan
           akuntabilitas publik. Gambar ditampilkan dalam resolusi terkompresi
           agar tetap cepat diakses.
@@ -55,8 +57,10 @@ export default function GaleriPage({
 
 async function GalleryContent({
   searchParams,
+  albums,
 }: {
   searchParams: Promise<{ album?: string }>;
+  albums: Awaited<ReturnType<typeof getPublicGalleries>>;
 }) {
   const { album } = await searchParams;
   return <GalleryBrowser albums={albums} initialSlug={album} />;

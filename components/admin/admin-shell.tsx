@@ -7,6 +7,7 @@ import {
   ExternalLink,
   FileText,
   History,
+  Images,
   LayoutDashboard,
   LogOut,
   Menu,
@@ -51,6 +52,7 @@ export default function AdminShell({
     ...(user.role === "superadmin"
       ? [
           { href: "/admin/pejabat", label: "Pejabat", icon: UserRound },
+          { href: "/admin/galeri", label: "Galeri", icon: Images },
           { href: "/admin/aktivitas", label: "Aktivitas", icon: History },
         ]
       : []),
