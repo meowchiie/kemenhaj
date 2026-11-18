@@ -11,6 +11,7 @@ import {
   LogOut,
   Menu,
   Newspaper,
+  UserRound,
   X,
 } from "lucide-react";
 import { Badge } from "@/components/admin/ui/badge";
@@ -48,7 +49,10 @@ export default function AdminShell({
       ? [{ href: "/admin/berita", label: "Berita", icon: Newspaper }]
       : []),
     ...(user.role === "superadmin"
-      ? [{ href: "/admin/aktivitas", label: "Aktivitas", icon: History }]
+      ? [
+          { href: "/admin/pejabat", label: "Pejabat", icon: UserRound },
+          { href: "/admin/aktivitas", label: "Aktivitas", icon: History },
+        ]
       : []),
   ];
 
