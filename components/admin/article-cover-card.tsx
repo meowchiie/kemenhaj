@@ -58,6 +58,7 @@ export default function ArticleCoverCard({
               src={cover.href}
               alt={cover.filename}
               fill
+              unoptimized
               sizes="640px"
               className="object-cover"
             />

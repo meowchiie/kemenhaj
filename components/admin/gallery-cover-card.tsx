@@ -57,6 +57,7 @@ export default function GalleryCoverCard({
               src={cover.href}
               alt={cover.filename}
               fill
+              unoptimized
               sizes="640px"
               className="object-cover"
             />

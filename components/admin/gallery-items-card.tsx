@@ -69,6 +69,7 @@ export default function GalleryItemsCard({
                       src={item.media.href}
                       alt={item.caption}
                       fill
+                      unoptimized
                       sizes="320px"
                       className="object-cover"
                     />

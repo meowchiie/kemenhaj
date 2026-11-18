@@ -57,6 +57,7 @@ export default function OfficialPhotoCard({
               src={photo.href}
               alt={photo.filename}
               fill
+              unoptimized
               sizes="224px"
               className="object-cover"
             />
