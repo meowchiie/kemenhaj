@@ -22,7 +22,7 @@ import {
   articles as contentArticles,
   officials as contentOfficials,
   services as contentServices,
-} from "../lib/content";
+} from "./seed-content";
 
 const uploadsDir = path.join(process.cwd(), "storage", "uploads");
 
