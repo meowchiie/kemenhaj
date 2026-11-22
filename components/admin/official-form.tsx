@@ -41,6 +41,15 @@ export default function OfficialForm({
     saveOfficialAction,
     initialState,
   );
+  const [name, setName] = useState(official?.name ?? "");
+  const [nip, setNip] = useState(official?.nip ?? "");
+  const [position, setPosition] = useState(official?.position ?? "");
+  const [unit, setUnit] = useState(official?.unit ?? "");
+  const [duties, setDuties] = useState(official?.duties ?? "");
+  const [contact, setContact] = useState(official?.contact ?? "");
+  const [sortOrder, setSortOrder] = useState(
+    String(official?.order ?? defaultOrder),
+  );
   const [isActive, setIsActive] = useState(official?.isActive ?? true);
   const errors = state.fieldErrors ?? {};
 
@@ -72,7 +81,8 @@ export default function OfficialForm({
                 <Input
                   id="name"
                   name="name"
-                  defaultValue={official?.name ?? ""}
+                  value={name}
+                  onChange={(event) => setName(event.target.value)}
                   required
                   aria-invalid={Boolean(errors.name)}
                 />
@@ -88,7 +98,8 @@ export default function OfficialForm({
                 <Input
                   id="nip"
                   name="nip"
-                  defaultValue={official?.nip ?? ""}
+                  value={nip}
+                  onChange={(event) => setNip(event.target.value)}
                   required
                   aria-invalid={Boolean(errors.nip)}
                 />
@@ -100,7 +111,8 @@ export default function OfficialForm({
                 <Input
                   id="position"
                   name="position"
-                  defaultValue={official?.position ?? ""}
+                  value={position}
+                  onChange={(event) => setPosition(event.target.value)}
                   required
                   aria-invalid={Boolean(errors.position)}
                 />
@@ -111,7 +123,8 @@ export default function OfficialForm({
                 <Input
                   id="unit"
                   name="unit"
-                  defaultValue={official?.unit ?? ""}
+                  value={unit}
+                  onChange={(event) => setUnit(event.target.value)}
                   required
                   aria-invalid={Boolean(errors.unit)}
                 />
@@ -123,7 +136,8 @@ export default function OfficialForm({
               <Textarea
                 id="duties"
                 name="duties"
-                defaultValue={official?.duties ?? ""}
+                value={duties}
+                onChange={(event) => setDuties(event.target.value)}
                 rows={4}
                 required
                 aria-invalid={Boolean(errors.duties)}
@@ -136,7 +150,8 @@ export default function OfficialForm({
                 <Input
                   id="contact"
                   name="contact"
-                  defaultValue={official?.contact ?? ""}
+                  value={contact}
+                  onChange={(event) => setContact(event.target.value)}
                   required
                   aria-invalid={Boolean(errors.contact)}
                 />
@@ -153,7 +168,8 @@ export default function OfficialForm({
                   type="number"
                   min={1}
                   max={999}
-                  defaultValue={official?.order ?? defaultOrder}
+                  value={sortOrder}
+                  onChange={(event) => setSortOrder(event.target.value)}
                   required
                   aria-invalid={Boolean(errors.sortOrder)}
                 />

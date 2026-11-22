@@ -62,6 +62,11 @@ export default function ServiceForm({ service }: { service?: AdminService }) {
   const [name, setName] = useState(service?.name ?? "");
   const [slug, setSlug] = useState(service?.slug ?? "");
   const [slugTouched, setSlugTouched] = useState(Boolean(service));
+  const [shortName, setShortName] = useState(service?.shortName ?? "");
+  const [description, setDescription] = useState(service?.description ?? "");
+  const [duration, setDuration] = useState(service?.duration ?? "");
+  const [cost, setCost] = useState(service?.cost ?? "");
+  const [note, setNote] = useState(service?.note ?? "");
   const [icon, setIcon] = useState<ServiceIconName>(service?.icon ?? "register");
   const [isPublished, setIsPublished] = useState(
     service?.isPublished ?? false,
@@ -138,7 +143,8 @@ export default function ServiceForm({ service }: { service?: AdminService }) {
                 <Input
                   id="shortName"
                   name="shortName"
-                  defaultValue={service?.shortName ?? ""}
+                  value={shortName}
+                  onChange={(event) => setShortName(event.target.value)}
                   required
                   aria-invalid={Boolean(errors.shortName)}
                 />
@@ -193,7 +199,8 @@ export default function ServiceForm({ service }: { service?: AdminService }) {
               <Textarea
                 id="description"
                 name="description"
-                defaultValue={service?.description ?? ""}
+                value={description}
+                onChange={(event) => setDescription(event.target.value)}
                 rows={4}
                 required
                 aria-invalid={Boolean(errors.description)}
@@ -211,7 +218,8 @@ export default function ServiceForm({ service }: { service?: AdminService }) {
                 <Input
                   id="duration"
                   name="duration"
-                  defaultValue={service?.duration ?? ""}
+                  value={duration}
+                  onChange={(event) => setDuration(event.target.value)}
                   required
                   aria-invalid={Boolean(errors.duration)}
                 />
@@ -222,7 +230,8 @@ export default function ServiceForm({ service }: { service?: AdminService }) {
                 <Input
                   id="cost"
                   name="cost"
-                  defaultValue={service?.cost ?? ""}
+                  value={cost}
+                  onChange={(event) => setCost(event.target.value)}
                   required
                   aria-invalid={Boolean(errors.cost)}
                 />
@@ -234,7 +243,8 @@ export default function ServiceForm({ service }: { service?: AdminService }) {
               <Textarea
                 id="note"
                 name="note"
-                defaultValue={service?.note ?? ""}
+                value={note}
+                onChange={(event) => setNote(event.target.value)}
                 rows={3}
               />
               <FieldDescription>

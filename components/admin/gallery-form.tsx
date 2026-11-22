@@ -48,6 +48,8 @@ export default function GalleryForm({ gallery }: { gallery?: AdminGallery }) {
   const [title, setTitle] = useState(gallery?.title ?? "");
   const [slug, setSlug] = useState(gallery?.slug ?? "");
   const [slugTouched, setSlugTouched] = useState(Boolean(gallery));
+  const [eventDate, setEventDate] = useState(gallery?.eventDate ?? "");
+  const [description, setDescription] = useState(gallery?.description ?? "");
   const [isPublished, setIsPublished] = useState(gallery?.isPublished ?? false);
   const errors = state.fieldErrors ?? {};
 
@@ -119,7 +121,8 @@ export default function GalleryForm({ gallery }: { gallery?: AdminGallery }) {
                   id="eventDate"
                   name="eventDate"
                   type="date"
-                  defaultValue={gallery?.eventDate ?? ""}
+                  value={eventDate}
+                  onChange={(event) => setEventDate(event.target.value)}
                   required
                   aria-invalid={Boolean(errors.eventDate)}
                 />
@@ -131,7 +134,8 @@ export default function GalleryForm({ gallery }: { gallery?: AdminGallery }) {
               <Textarea
                 id="description"
                 name="description"
-                defaultValue={gallery?.description ?? ""}
+                value={description}
+                onChange={(event) => setDescription(event.target.value)}
                 rows={3}
                 required
                 aria-invalid={Boolean(errors.description)}

@@ -98,6 +98,9 @@ export default function ArticleForm({
   const [slug, setSlug] = useState(article?.slug ?? "");
   const [slugTouched, setSlugTouched] = useState(Boolean(article));
   const [category, setCategory] = useState(article?.category ?? "");
+  const [excerpt, setExcerpt] = useState(article?.excerpt ?? "");
+  const [author, setAuthor] = useState(article?.author ?? "");
+  const [publishedAt, setPublishedAt] = useState(article?.date ?? "");
   const [isPublished, setIsPublished] = useState(article?.isPublished ?? false);
   const [blocks, setBlocks] = useState<UiBlock[]>(
     article && article.body.length > 0
@@ -207,7 +210,8 @@ export default function ArticleForm({
               <Textarea
                 id="excerpt"
                 name="excerpt"
-                defaultValue={article?.excerpt ?? ""}
+                value={excerpt}
+                onChange={(event) => setExcerpt(event.target.value)}
                 rows={3}
                 required
                 aria-invalid={Boolean(errors.excerpt)}
@@ -223,7 +227,8 @@ export default function ArticleForm({
                 <Input
                   id="author"
                   name="author"
-                  defaultValue={article?.author ?? ""}
+                  value={author}
+                  onChange={(event) => setAuthor(event.target.value)}
                   required
                   aria-invalid={Boolean(errors.author)}
                 />
@@ -235,7 +240,8 @@ export default function ArticleForm({
                   id="publishedAt"
                   name="publishedAt"
                   type="date"
-                  defaultValue={article?.date ?? ""}
+                  value={publishedAt}
+                  onChange={(event) => setPublishedAt(event.target.value)}
                   required
                   aria-invalid={Boolean(errors.publishedAt)}
                 />
