@@ -40,7 +40,7 @@ export default function OfficialsGrid({ officials }: { officials: Official[] }) 
               alt={`Foto ${official.name}`}
               fill
               sizes="(min-width: 1280px) 270px, (min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-              className="object-cover grayscale transition-transform duration-500 group-hover:scale-[1.03]"
+              className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
             />
             <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent px-4 pt-16 pb-4 text-canvas">
               <p className="t-title leading-tight">{official.name}</p>
@@ -84,7 +84,7 @@ export default function OfficialsGrid({ officials }: { officials: Official[] }) 
                 alt={`Foto ${selected.name}`}
                 fill
                 sizes="400px"
-                className="object-cover object-top grayscale"
+                className="object-cover object-top"
               />
             </div>
 

@@ -32,8 +32,10 @@ const initialState: OfficialFormState = { ok: false };
 
 export default function OfficialForm({
   official,
+  defaultOrder = 1,
 }: {
   official?: AdminOfficial;
+  defaultOrder?: number;
 }) {
   const [state, formAction, pending] = useActionState(
     saveOfficialAction,
@@ -151,12 +153,12 @@ export default function OfficialForm({
                   type="number"
                   min={1}
                   max={999}
-                  defaultValue={official?.order ?? 1}
+                  defaultValue={official?.order ?? defaultOrder}
                   required
                   aria-invalid={Boolean(errors.sortOrder)}
                 />
                 <FieldDescription>
-                  Angka kecil tampil lebih dulu. Harus unik.
+                  Angka kecil tampil lebih dulu.
                 </FieldDescription>
               </Field>
             </div>
@@ -195,7 +197,7 @@ export default function OfficialForm({
           ) : (
             <Save data-icon="inline-start" />
           )}
-          {pending ? "Menyimpan…" : "Simpan perubahan"}
+          {pending ? "Menyimpan…" : official ? "Simpan perubahan" : "Simpan pejabat"}
         </Button>
         <Button
           variant="outline"

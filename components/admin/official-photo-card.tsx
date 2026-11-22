@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { ImageIcon, Upload } from "lucide-react";
 import {
   uploadOfficialPhotoAction,
@@ -23,6 +23,7 @@ import {
 } from "@/components/admin/ui/field";
 import { Input } from "@/components/admin/ui/input";
 import { Spinner } from "@/components/admin/ui/spinner";
+import { useFilePreview } from "@/components/admin/use-file-preview";
 import type { OfficialMedia } from "@/lib/data/officials";
 
 const initialState: OfficialFormState = { ok: false };
@@ -38,6 +39,9 @@ export default function OfficialPhotoCard({
     uploadOfficialPhotoAction,
     initialState,
   );
+  const [file, setFile] = useState<File | null>(null);
+  const preview = useFilePreview(file);
+  const shownPhoto = preview ?? photo?.href ?? null;
 
   return (
     <Card>
@@ -51,11 +55,11 @@ export default function OfficialPhotoCard({
         </CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
-        {photo ? (
+        {shownPhoto ? (
           <div className="relative aspect-[4/5] max-w-56 overflow-hidden rounded-xl bg-muted">
             <Image
-              src={photo.href}
-              alt={photo.filename}
+              src={shownPhoto}
+              alt={preview ? "Pratinjau foto baru" : (photo?.filename ?? "")}
               fill
               unoptimized
               sizes="224px"
@@ -79,10 +83,15 @@ export default function OfficialPhotoCard({
               name="file"
               type="file"
               accept="image/jpeg,image/png,image/webp"
+              onChange={(event) =>
+                setFile(event.target.files?.[0] ?? null)
+              }
               required
             />
             <FieldDescription>
-              Foto tegak, wajah terlihat jelas.
+              {preview
+                ? "Pratinjau foto baru. Klik unggah untuk menyimpan."
+                : "Foto tegak, wajah terlihat jelas."}
             </FieldDescription>
           </Field>
 

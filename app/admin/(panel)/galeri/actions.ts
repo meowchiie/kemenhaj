@@ -12,6 +12,7 @@ import {
   replaceGalleryCover,
   updateGallery,
 } from "@/lib/data/galleries";
+import { isUniqueViolation } from "@/lib/db/errors";
 import { UploadError } from "@/lib/uploads/storage";
 import { galleryItemSchema, gallerySchema } from "@/lib/validation/gallery";
 
@@ -75,12 +76,7 @@ export async function saveGalleryAction(
       return { ok: false, message: error.message };
     }
 
-    if (
-      typeof error === "object" &&
-      error !== null &&
-      "code" in error &&
-      error.code === "23505"
-    ) {
+    if (isUniqueViolation(error)) {
       return {
         ok: false,
         message: "Slug sudah dipakai album lain. Gunakan slug berbeda.",

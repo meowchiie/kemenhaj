@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { FileText, Upload } from "lucide-react";
 import { uploadPdfAction } from "@/app/admin/(panel)/layanan/actions";
 import { Alert, AlertDescription, AlertTitle } from "@/components/admin/ui/alert";
@@ -34,6 +34,7 @@ export default function PdfUploadCard({
     uploadPdfAction,
     initialState,
   );
+  const [file, setFile] = useState<File | null>(null);
 
   return (
     <Card>
@@ -80,10 +81,15 @@ export default function PdfUploadCard({
               name="file"
               type="file"
               accept="application/pdf,.pdf"
+              onChange={(event) =>
+                setFile(event.target.files?.[0] ?? null)
+              }
               required
             />
             <FieldDescription>
-              Hanya PDF dengan tanda tangan berkas valid yang diterima.
+              {file
+                ? `${file.name} · ${Math.max(1, Math.round(file.size / 1024))} KB`
+                : "Hanya PDF dengan tanda tangan berkas valid yang diterima."}
             </FieldDescription>
           </Field>
 

@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { Images, Upload } from "lucide-react";
 import {
   addGalleryItemAction,
@@ -23,6 +23,7 @@ import {
 } from "@/components/admin/ui/field";
 import { Input } from "@/components/admin/ui/input";
 import { Spinner } from "@/components/admin/ui/spinner";
+import { useFilePreview } from "@/components/admin/use-file-preview";
 import DeleteGalleryItemButton from "@/components/admin/delete-gallery-item-button";
 import type { AdminGalleryItem } from "@/lib/data/galleries";
 
@@ -39,6 +40,8 @@ export default function GalleryItemsCard({
     addGalleryItemAction,
     initialState,
   );
+  const [file, setFile] = useState<File | null>(null);
+  const preview = useFilePreview(file);
 
   return (
     <Card>
@@ -96,10 +99,26 @@ export default function GalleryItemsCard({
               name="file"
               type="file"
               accept="image/jpeg,image/png,image/webp"
+              onChange={(event) =>
+                setFile(event.target.files?.[0] ?? null)
+              }
               required
             />
             <FieldDescription>Maksimal 2 MB per gambar.</FieldDescription>
           </Field>
+
+          {preview ? (
+            <div className="relative aspect-[4/3] overflow-hidden rounded-xl bg-muted">
+              <Image
+                src={preview}
+                alt="Pratinjau foto album"
+                fill
+                unoptimized
+                sizes="320px"
+                className="object-cover"
+              />
+            </div>
+          ) : null}
           <Field>
             <FieldLabel htmlFor="caption">Keterangan foto</FieldLabel>
             <Input

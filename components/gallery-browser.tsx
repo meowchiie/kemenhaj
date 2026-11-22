@@ -111,7 +111,7 @@ export default function GalleryBrowser({
                 alt=""
                 fill
                 sizes="(min-width: 1024px) 360px, (min-width: 640px) 50vw, 100vw"
-                className="object-cover grayscale transition-all duration-500 group-hover:scale-[1.03] group-hover:grayscale-0"
+                className="object-cover transition-all duration-500 group-hover:scale-[1.03]"
               />
               <span className="absolute top-3 left-3">
                 <Tag tone="overlay">{album.year}</Tag>

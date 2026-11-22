@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { ImageIcon, Upload } from "lucide-react";
 import {
   uploadArticleCoverAction,
@@ -23,6 +23,7 @@ import {
 } from "@/components/admin/ui/field";
 import { Input } from "@/components/admin/ui/input";
 import { Spinner } from "@/components/admin/ui/spinner";
+import { useFilePreview } from "@/components/admin/use-file-preview";
 import type { ArticleMedia } from "@/lib/data/articles";
 
 const initialState: ArticleFormState = { ok: false };
@@ -38,6 +39,9 @@ export default function ArticleCoverCard({
     uploadArticleCoverAction,
     initialState,
   );
+  const [file, setFile] = useState<File | null>(null);
+  const preview = useFilePreview(file);
+  const shownCover = preview ?? cover?.href ?? null;
 
   return (
     <Card>
@@ -52,11 +56,11 @@ export default function ArticleCoverCard({
         </CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
-        {cover ? (
+        {shownCover ? (
           <div className="relative aspect-video overflow-hidden rounded-xl bg-muted">
             <Image
-              src={cover.href}
-              alt={cover.filename}
+              src={shownCover}
+              alt={preview ? "Pratinjau gambar baru" : (cover?.filename ?? "")}
               fill
               unoptimized
               sizes="640px"
@@ -80,9 +84,16 @@ export default function ArticleCoverCard({
               name="file"
               type="file"
               accept="image/jpeg,image/png,image/webp"
+              onChange={(event) =>
+                setFile(event.target.files?.[0] ?? null)
+              }
               required
             />
-            <FieldDescription>Rasio yang disarankan 16:9.</FieldDescription>
+            <FieldDescription>
+              {preview
+                ? "Pratinjau gambar baru. Klik unggah untuk menyimpan."
+                : "Rasio yang disarankan 16:9."}
+            </FieldDescription>
           </Field>
 
           {state.message ? (

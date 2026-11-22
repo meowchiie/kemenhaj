@@ -61,6 +61,7 @@ export default function ServiceForm({ service }: { service?: AdminService }) {
   );
   const [name, setName] = useState(service?.name ?? "");
   const [slug, setSlug] = useState(service?.slug ?? "");
+  const [slugTouched, setSlugTouched] = useState(Boolean(service));
   const [icon, setIcon] = useState<ServiceIconName>(service?.icon ?? "register");
   const [isPublished, setIsPublished] = useState(
     service?.isPublished ?? false,
@@ -117,9 +118,10 @@ export default function ServiceForm({ service }: { service?: AdminService }) {
                   id="name"
                   name="name"
                   value={name}
-                  onChange={(event) => setName(event.target.value)}
-                  onBlur={() => {
-                    if (!slug) setSlug(slugify(name));
+                  onChange={(event) => {
+                    const value = event.target.value;
+                    setName(value);
+                    if (!slugTouched) setSlug(slugify(value));
                   }}
                   required
                   aria-invalid={Boolean(errors.name)}
@@ -151,7 +153,10 @@ export default function ServiceForm({ service }: { service?: AdminService }) {
                   id="slug"
                   name="slug"
                   value={slug}
-                  onChange={(event) => setSlug(event.target.value)}
+                  onChange={(event) => {
+                    setSlug(event.target.value);
+                    setSlugTouched(true);
+                  }}
                   required
                   aria-invalid={Boolean(errors.slug)}
                 />
@@ -179,6 +184,7 @@ export default function ServiceForm({ service }: { service?: AdminService }) {
                     </SelectGroup>
                   </SelectContent>
                 </Select>
+                <input type="hidden" name="icon" value={icon} />
               </Field>
             </div>
 
@@ -390,7 +396,7 @@ export default function ServiceForm({ service }: { service?: AdminService }) {
       <div className="flex flex-wrap items-center gap-3">
         <Button type="submit" size="lg" disabled={pending} className="rounded-full">
           {pending ? <Spinner data-icon="inline-start" /> : <Save data-icon="inline-start" />}
-          {pending ? "Menyimpan…" : "Simpan perubahan"}
+          {pending ? "Menyimpan…" : service ? "Simpan perubahan" : "Simpan layanan"}
         </Button>
         <Button
           variant="outline"

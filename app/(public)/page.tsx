@@ -287,7 +287,7 @@ export default async function HomePage() {
                   alt=""
                   fill
                   sizes="(min-width: 640px) 33vw, 100vw"
-                  className="object-cover grayscale transition-all duration-500 group-hover:scale-[1.03] group-hover:grayscale-0"
+                  className="object-cover transition-all duration-500 group-hover:scale-[1.03]"
                 />
                 <span className="absolute left-3 top-3">
                   <Tag tone="overlay">{album.year}</Tag>

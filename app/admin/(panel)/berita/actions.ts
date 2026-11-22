@@ -10,6 +10,7 @@ import {
   replaceArticleCover,
   updateArticle,
 } from "@/lib/data/articles";
+import { isUniqueViolation } from "@/lib/db/errors";
 import { UploadError } from "@/lib/uploads/storage";
 import { articleSchema } from "@/lib/validation/article";
 
@@ -90,12 +91,7 @@ export async function saveArticleAction(
       return { ok: false, message: error.message };
     }
 
-    if (
-      typeof error === "object" &&
-      error !== null &&
-      "code" in error &&
-      error.code === "23505"
-    ) {
+    if (isUniqueViolation(error)) {
       return {
         ok: false,
         message: "Slug sudah dipakai berita lain. Gunakan slug berbeda.",

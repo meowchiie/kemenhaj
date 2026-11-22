@@ -10,6 +10,7 @@ import {
   replaceOfficialPhoto,
   updateOfficial,
 } from "@/lib/data/officials";
+import { isUniqueViolation } from "@/lib/db/errors";
 import { UploadError } from "@/lib/uploads/storage";
 import { officialSchema } from "@/lib/validation/official";
 
@@ -76,15 +77,10 @@ export async function saveOfficialAction(
       return { ok: false, message: error.message };
     }
 
-    if (
-      typeof error === "object" &&
-      error !== null &&
-      "code" in error &&
-      error.code === "23505"
-    ) {
+    if (isUniqueViolation(error)) {
       return {
         ok: false,
-        message: "NIP atau urutan sudah dipakai pejabat lain.",
+        message: "NIP sudah dipakai pejabat lain. Gunakan NIP berbeda.",
       };
     }
 

@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import AdminPageHeader from "@/components/admin/page-header";
 import OfficialForm from "@/components/admin/official-form";
 import { can, requireUser } from "@/lib/auth/permissions";
+import { getNextOfficialOrder } from "@/lib/data/officials";
 
 export const instant = false;
 
@@ -12,6 +13,8 @@ export default async function NewOfficialPage() {
   if (!can(user, "officials:write")) {
     redirect("/admin");
   }
+
+  const nextOrder = await getNextOfficialOrder();
 
   return (
     <>
@@ -28,7 +31,7 @@ export default async function NewOfficialPage() {
           </Link>
         }
       />
-      <OfficialForm />
+      <OfficialForm defaultOrder={nextOrder} />
     </>
   );
 }

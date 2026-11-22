@@ -47,6 +47,7 @@ export default function GalleryForm({ gallery }: { gallery?: AdminGallery }) {
   );
   const [title, setTitle] = useState(gallery?.title ?? "");
   const [slug, setSlug] = useState(gallery?.slug ?? "");
+  const [slugTouched, setSlugTouched] = useState(Boolean(gallery));
   const [isPublished, setIsPublished] = useState(gallery?.isPublished ?? false);
   const errors = state.fieldErrors ?? {};
 
@@ -78,9 +79,10 @@ export default function GalleryForm({ gallery }: { gallery?: AdminGallery }) {
                 id="title"
                 name="title"
                 value={title}
-                onChange={(event) => setTitle(event.target.value)}
-                onBlur={() => {
-                  if (!slug) setSlug(slugify(title));
+                onChange={(event) => {
+                  const value = event.target.value;
+                  setTitle(value);
+                  if (!slugTouched) setSlug(slugify(value));
                 }}
                 required
                 aria-invalid={Boolean(errors.title)}
@@ -99,7 +101,10 @@ export default function GalleryForm({ gallery }: { gallery?: AdminGallery }) {
                   id="slug"
                   name="slug"
                   value={slug}
-                  onChange={(event) => setSlug(event.target.value)}
+                  onChange={(event) => {
+                    setSlug(event.target.value);
+                    setSlugTouched(true);
+                  }}
                   required
                   aria-invalid={Boolean(errors.slug)}
                 />
@@ -167,7 +172,7 @@ export default function GalleryForm({ gallery }: { gallery?: AdminGallery }) {
           ) : (
             <Save data-icon="inline-start" />
           )}
-          {pending ? "Menyimpan…" : "Simpan perubahan"}
+          {pending ? "Menyimpan…" : gallery ? "Simpan perubahan" : "Simpan album"}
         </Button>
         <Button
           variant="outline"

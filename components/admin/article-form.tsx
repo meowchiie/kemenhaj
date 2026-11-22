@@ -96,6 +96,7 @@ export default function ArticleForm({
   );
   const [title, setTitle] = useState(article?.title ?? "");
   const [slug, setSlug] = useState(article?.slug ?? "");
+  const [slugTouched, setSlugTouched] = useState(Boolean(article));
   const [category, setCategory] = useState(article?.category ?? "");
   const [isPublished, setIsPublished] = useState(article?.isPublished ?? false);
   const [blocks, setBlocks] = useState<UiBlock[]>(
@@ -144,9 +145,10 @@ export default function ArticleForm({
                 id="title"
                 name="title"
                 value={title}
-                onChange={(event) => setTitle(event.target.value)}
-                onBlur={() => {
-                  if (!slug) setSlug(slugify(title));
+                onChange={(event) => {
+                  const value = event.target.value;
+                  setTitle(value);
+                  if (!slugTouched) setSlug(slugify(value));
                 }}
                 required
                 aria-invalid={Boolean(errors.title)}
@@ -165,7 +167,10 @@ export default function ArticleForm({
                   id="slug"
                   name="slug"
                   value={slug}
-                  onChange={(event) => setSlug(event.target.value)}
+                  onChange={(event) => {
+                    setSlug(event.target.value);
+                    setSlugTouched(true);
+                  }}
                   required
                   aria-invalid={Boolean(errors.slug)}
                 />
@@ -363,7 +368,7 @@ export default function ArticleForm({
           ) : (
             <Save data-icon="inline-start" />
           )}
-          {pending ? "Menyimpan…" : "Simpan perubahan"}
+          {pending ? "Menyimpan…" : article ? "Simpan perubahan" : "Simpan berita"}
         </Button>
         <Button
           variant="outline"

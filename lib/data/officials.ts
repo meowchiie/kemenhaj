@@ -92,9 +92,21 @@ export async function getPublicOfficials(): Promise<Official[]> {
     .from(officials)
     .leftJoin(media, eq(officials.photoMediaId, media.id))
     .where(eq(officials.isActive, true))
-    .orderBy(asc(officials.sortOrder));
+    .orderBy(asc(officials.sortOrder), asc(officials.name));
 
   return rows.map(toOfficial);
+}
+
+export async function getNextOfficialOrder(): Promise<number> {
+  await requirePermission("officials:read");
+
+  const [row] = await db
+    .select({
+      maxOrder: sql<number>`coalesce(max(${officials.sortOrder}), 0)::int`,
+    })
+    .from(officials);
+
+  return Math.min((row?.maxOrder ?? 0) + 1, 999);
 }
 
 export async function listAdminOfficials(): Promise<AdminOfficial[]> {
@@ -104,7 +116,7 @@ export async function listAdminOfficials(): Promise<AdminOfficial[]> {
     .select(columns)
     .from(officials)
     .leftJoin(media, eq(officials.photoMediaId, media.id))
-    .orderBy(asc(officials.sortOrder));
+    .orderBy(asc(officials.sortOrder), asc(officials.name));
 
   return rows.map(toAdminOfficial);
 }

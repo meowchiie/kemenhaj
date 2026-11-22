@@ -10,6 +10,7 @@ import {
   replaceFormPdf,
   updateService,
 } from "@/lib/data/services";
+import { isUniqueViolation } from "@/lib/db/errors";
 import { UploadError } from "@/lib/uploads/storage";
 import { serviceSchema } from "@/lib/validation/service";
 
@@ -94,12 +95,7 @@ export async function saveServiceAction(
       return { ok: false, message: error.message };
     }
 
-    if (
-      typeof error === "object" &&
-      error !== null &&
-      "code" in error &&
-      error.code === "23505"
-    ) {
+    if (isUniqueViolation(error)) {
       return {
         ok: false,
         message: "Slug sudah dipakai layanan lain. Gunakan slug berbeda.",

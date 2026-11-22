@@ -182,7 +182,7 @@ export const officials = pgTable(
   },
   (table) => [
     uniqueIndex("officials_nip_unique").on(table.nip),
-    uniqueIndex("officials_sort_order_unique").on(table.sortOrder),
+    index("officials_sort_order_idx").on(table.sortOrder),
   ],
 );
 

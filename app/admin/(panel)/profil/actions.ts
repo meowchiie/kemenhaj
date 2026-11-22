@@ -7,6 +7,7 @@ import {
   updatePassword,
   updateProfile,
 } from "@/lib/data/profile";
+import { isUniqueViolation } from "@/lib/db/errors";
 import { passwordSchema, profileSchema } from "@/lib/validation/profile";
 
 export type ProfileFormState = {
@@ -24,15 +25,6 @@ function fieldErrorsOf(issues: { path: PropertyKey[]; message: string }[]) {
   }
 
   return fieldErrors;
-}
-
-function isUniqueViolation(error: unknown): boolean {
-  return (
-    typeof error === "object" &&
-    error !== null &&
-    "code" in error &&
-    error.code === "23505"
-  );
 }
 
 export async function saveProfileAction(
