@@ -201,7 +201,7 @@ export default async function ArticlePage({
                 </li>
               ))}
             </ul>
-            <div className="mt-4">
+            {/* <div className="mt-4">
               <a
                 href="/dokumen/formulir-pelimpahan-porsi.pdf"
                 className="inline-flex h-9 items-center gap-2 rounded-full bg-canvas px-4 text-[13px] font-semibold text-ink"
@@ -209,7 +209,7 @@ export default async function ArticlePage({
                 <Download className="size-3.5" />
                 Unduh formulir
               </a>
-            </div>
+            </div> */}
           </div>
 
           <div className="rounded-[24px] border border-hairline-soft p-6">
