@@ -22,7 +22,7 @@ export const instant = false;
 const statusMessages: Record<string, { title: string; description: string; error?: boolean }> = {
   baru: {
     title: "Layanan dibuat",
-    description: "Lengkapi formulir PDF agar jemaah bisa mengunduhnya.",
+    description: "Layanan baru berhasil dibuat.",
   },
   dihapus: {
     title: "Layanan dihapus",
@@ -55,7 +55,7 @@ export default async function AdminServicesPage({
       <AdminPageHeader
         eyebrow="Layanan"
         title="Daftar layanan"
-        description="Kelola persyaratan, alur proses, dan formulir PDF yang tampil di portal publik."
+        description="Kelola persyaratan dan alur proses yang tampil di portal publik."
         actions={
           can(user, "services:write") ? (
             <Button
@@ -98,7 +98,7 @@ export default async function AdminServicesPage({
               <TableRow>
                 <TableHead>Layanan</TableHead>
                 <TableHead>Status</TableHead>
-                <TableHead className="hidden md:table-cell">Formulir</TableHead>
+                {/* <TableHead className="hidden md:table-cell">Formulir</TableHead> */}
                 <TableHead className="hidden sm:table-cell">
                   Diperbarui
                 </TableHead>
@@ -121,11 +121,11 @@ export default async function AdminServicesPage({
                       <Badge variant="outline">Draf</Badge>
                     )}
                   </TableCell>
-                  <TableCell className="hidden max-w-48 md:table-cell">
+                  {/* <TableCell className="hidden max-w-48 md:table-cell">
                     <span className="block truncate text-xs text-muted-foreground">
                       {service.form ? service.form.filename : "Belum ada"}
                     </span>
-                  </TableCell>
+                  </TableCell> */}
                   <TableCell className="hidden text-xs text-muted-foreground sm:table-cell">
                     {formatDate(service.updatedAt)}
                   </TableCell>

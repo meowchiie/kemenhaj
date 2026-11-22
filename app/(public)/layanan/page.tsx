@@ -18,7 +18,7 @@ import { getPublicServices } from "@/lib/data/services";
 export const metadata = {
   title: "Layanan",
   description:
-    "Persyaratan, alur proses, dan formulir untuk pendaftaran haji, pelimpahan porsi, dan pembatalan porsi.",
+    "Persyaratan dan alur proses untuk pendaftaran haji, pelimpahan porsi, dan pembatalan porsi.",
 };
 
 const faqs = [
@@ -57,8 +57,8 @@ export default async function LayananPage() {
       <PageBanner
         eyebrow="Layanan informasi"
         title="Syarat dan alur layanan."
-        description="Tiga layanan administratif yang paling sering diajukan masyarakat. Setiap halaman memuat daftar dokumen, alur proses, dan formulir PDF yang bisa diunduh lebih dulu."
-        image="/images/galeri-2.jpg"
+        description="Tiga layanan administratif yang paling sering diajukan masyarakat. Setiap halaman memuat daftar dokumen dan alur proses yang bisa diunduh lebih dulu."
+        image="/images/page-banner/2.jpeg"
         actions={
           <>
             <PillLink href="/layanan/pelimpahan-porsi" variant="canvas">
@@ -72,7 +72,7 @@ export default async function LayananPage() {
         }
       />
 
-      <section className="wrap pt-6">
+      {/* <section className="wrap pt-6">
         <div className="rounded-[24px] bg-soft px-6 py-6 sm:px-8">
           <p className="t-label text-subtle">Sebelum datang</p>
           <ol className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
@@ -118,7 +118,7 @@ export default async function LayananPage() {
             <ArrowUpRight className="size-3.5" />
           </a>
         </div>
-      </section>
+      </section> */}
 
       <section className="wrap py-16 sm:py-20">
         <SectionHead
@@ -149,10 +149,10 @@ export default async function LayananPage() {
                     <FileText className="size-3.5" />
                     {service.requirements.length} dokumen wajib
                   </span>
-                  <span className="inline-flex items-center gap-1.5">
+                  {/* <span className="inline-flex items-center gap-1.5">
                     <Download className="size-3.5" />
                     {service.form ? "Formulir PDF tersedia" : "Formulir menyusul"}
-                  </span>
+                  </span> */}
                   <span>{service.cost}</span>
                 </div>
               </div>
@@ -161,14 +161,14 @@ export default async function LayananPage() {
                   Lihat persyaratan
                   <ArrowRight className="size-4" />
                 </PillLink>
-                <a
+                {/* <a
                   href={service.form?.href ?? "#"}
                   aria-disabled={!service.form}
                   className="inline-flex h-11 items-center gap-2 rounded-full border border-hairline bg-canvas px-5 text-[15px] font-semibold text-ink transition-colors hover:border-ink aria-disabled:pointer-events-none aria-disabled:opacity-50"
                 >
                   <Download className="size-4" />
                   Formulir
-                </a>
+                </a> */}
               </div>
             </div>
           ))}

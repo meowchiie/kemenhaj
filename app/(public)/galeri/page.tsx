@@ -24,7 +24,7 @@ export default async function GaleriPage({
         eyebrow="Galeri multimedia"
         title="Dokumentasi kegiatan."
         description="Kumpulan foto dan video kegiatan pelayanan haji dan umrah, diarsipkan per album dan tahun kegiatan."
-        image="/images/galeri-6.jpg"
+        image="/images/page-banner/4.jpeg"
         actions={
           <>
             <PillLink href="/berita" variant="canvas">

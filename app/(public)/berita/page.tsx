@@ -25,7 +25,7 @@ export default function BeritaPage({
         eyebrow="Berita & informasi"
         title="Kabar dari Kemenhaj Pare."
         description="Pengumuman resmi, jadwal layanan, dan dokumentasi kegiatan terbaru. Gunakan kategori untuk mempersempit pencarian."
-        image="/images/berita-4.jpg"
+        image="/images/page-banner/1.jpeg"
         actions={
           <PillLink href="/pencarian" variant="canvas">
             Cari berita lain

@@ -74,13 +74,13 @@ export const categories: Category[] = [
 ];
 
 export const site = {
-  name: "Kemenhaj Pare",
+  name: "Kemenhaj Parepare",
   longName: "Kementerian Haji dan Umrah Kota Parepare",
-  address: "Jl. H. Agus Salim No. 12, Kota Parepare, Sulawesi Selatan 91111",
-  phone: "(0421) 21345",
-  email: "info@kemenhajpare.go.id",
-  hours: "Senin–Jumat, 08.00–15.00 WITA",
-  maps: "https://maps.google.com/?q=Parepare",
+  address: "Jl. Cendana No.22 A, Bumi Harapan, Kec. Bacukiki Bar., Kota Parepare, Sulawesi Selatan 91121",
+  phone: "(+62) 851-6652-4582",
+  email: "kemenhaj_pare@gmail.com",
+  hours: "Senin–Kamis, 08.00–16.00 WITA & Jumat, 08.00-16.30 WITA",
+  maps: "https://maps.app.goo.gl/DHuj99gcBcbJvwPo9",
 };
 
 export function formatDate(iso: string): string {

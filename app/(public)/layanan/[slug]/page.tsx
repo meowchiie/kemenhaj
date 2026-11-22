@@ -216,7 +216,7 @@ export default async function ServiceDetailPage({
               </div>
             </dl>
 
-            {service.form ? (
+            {/* {service.form ? (
               <>
                 <PillLink
                   href={service.form.href}
@@ -235,7 +235,7 @@ export default async function ServiceDetailPage({
                 Formulir PDF belum tersedia. Hubungi petugas untuk berkas
                 cetak.
               </p>
-            )}
+            )} */}
           </div>
 
           <div className="mt-3 rounded-[24px] border border-hairline-soft p-6">

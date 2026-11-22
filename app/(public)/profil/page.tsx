@@ -78,7 +78,7 @@ export default async function ProfilPage() {
         eyebrow="Profil organisasi"
         title="Struktur organisasi."
         description="Kantor Kementerian Haji dan Umrah Kota Parepare menjalankan layanan haji dan umrah melalui empat unit kerja yang saling terkoordinasi."
-        image="/images/galeri-7.jpg"
+        image="/images/page-banner/3.jpeg"
         actions={
           <>
             <PillLink href="#pejabat" variant="canvas">

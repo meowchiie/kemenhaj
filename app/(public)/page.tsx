@@ -22,6 +22,8 @@ import {
 } from "@/lib/data/articles";
 import { getPublicGalleries } from "@/lib/data/galleries";
 import { getPublicServices } from "@/lib/data/services";
+import OfficeMap from "@/components/office-map";
+
 
 export default async function HomePage() {
   const [services, articles, albums] = await Promise.all([
@@ -238,7 +240,7 @@ export default async function HomePage() {
 
             <div className="rounded-[24px] border border-hairline-soft p-6">
               <p className="t-label text-subtle">Loket layanan</p>
-              <p className="t-title mt-3">Senin–Jumat, 08.00–15.00 WITA</p>
+              <p className="t-title mt-3">{ site.hours }</p>
               <div className="t-sm mt-4 flex flex-col gap-3 text-subtle">
                 <span className="flex items-start gap-2.5">
                   <MapPin className="mt-0.5 size-4 shrink-0" />
@@ -248,6 +250,9 @@ export default async function HomePage() {
                   <Phone className="size-4 shrink-0" />
                   {site.phone}
                 </span>
+              </div>
+              <div className="mt-5">
+                <OfficeMap className="aspect-[16/10]" />
               </div>
               <div className="mt-5">
                 <PillLink href="/profil" variant="soft" size="sm">

@@ -97,7 +97,7 @@ async function SearchContent({
         eyebrow="Pencarian terpadu"
         title="Cari di portal."
         description="Satu kata kunci untuk berita, persyaratan layanan, dan album galeri. Hasil dikelompokkan agar mudah dipindai."
-        image="/images/berita-5.jpg"
+        image="/images/page-banner/5.jpeg"
       >
         <form
           action="/pencarian"
