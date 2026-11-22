@@ -19,9 +19,11 @@ import {
 import {
   Field,
   FieldDescription,
+  FieldError,
   FieldGroup,
   FieldLabel,
 } from "@/components/admin/ui/field";
+import { getFieldError } from "@/components/admin/form-error";
 import { Input } from "@/components/admin/ui/input";
 import { Spinner } from "@/components/admin/ui/spinner";
 import { Switch } from "@/components/admin/ui/switch";
@@ -52,6 +54,7 @@ export default function OfficialForm({
   );
   const [isActive, setIsActive] = useState(official?.isActive ?? true);
   const errors = state.fieldErrors ?? {};
+  const errorOf = (path: string) => getFieldError(errors, path);
 
   return (
     <form action={formAction} className="flex flex-col gap-6">
@@ -104,6 +107,7 @@ export default function OfficialForm({
                   aria-invalid={Boolean(errors.nip)}
                 />
                 <FieldDescription>Harus unik antar pejabat.</FieldDescription>
+                <FieldError errors={[{ message: errorOf("nip") }]} />
               </Field>
 
               <Field data-invalid={Boolean(errors.position)}>
@@ -116,6 +120,7 @@ export default function OfficialForm({
                   required
                   aria-invalid={Boolean(errors.position)}
                 />
+                <FieldError errors={[{ message: errorOf("position") }]} />
               </Field>
 
               <Field data-invalid={Boolean(errors.unit)}>
@@ -128,6 +133,7 @@ export default function OfficialForm({
                   required
                   aria-invalid={Boolean(errors.unit)}
                 />
+                <FieldError errors={[{ message: errorOf("unit") }]} />
               </Field>
             </div>
 
@@ -142,6 +148,7 @@ export default function OfficialForm({
                 required
                 aria-invalid={Boolean(errors.duties)}
               />
+              <FieldError errors={[{ message: errorOf("duties") }]} />
             </Field>
 
             <div className="grid gap-5 sm:grid-cols-2">
@@ -158,6 +165,7 @@ export default function OfficialForm({
                 <FieldDescription>
                   Nomor telepon atau alamat email resmi.
                 </FieldDescription>
+                <FieldError errors={[{ message: errorOf("contact") }]} />
               </Field>
 
               <Field data-invalid={Boolean(errors.sortOrder)}>
@@ -176,6 +184,7 @@ export default function OfficialForm({
                 <FieldDescription>
                   Angka kecil tampil lebih dulu.
                 </FieldDescription>
+                <FieldError errors={[{ message: errorOf("sortOrder") }]} />
               </Field>
             </div>
 

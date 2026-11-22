@@ -19,9 +19,11 @@ import {
 import {
   Field,
   FieldDescription,
+  FieldError,
   FieldGroup,
   FieldLabel,
 } from "@/components/admin/ui/field";
+import { getFieldError } from "@/components/admin/form-error";
 import { Input } from "@/components/admin/ui/input";
 import { Spinner } from "@/components/admin/ui/spinner";
 import { Switch } from "@/components/admin/ui/switch";
@@ -52,6 +54,7 @@ export default function GalleryForm({ gallery }: { gallery?: AdminGallery }) {
   const [description, setDescription] = useState(gallery?.description ?? "");
   const [isPublished, setIsPublished] = useState(gallery?.isPublished ?? false);
   const errors = state.fieldErrors ?? {};
+  const errorOf = (path: string) => getFieldError(errors, path);
 
   return (
     <form action={formAction} className="flex flex-col gap-6">
@@ -113,6 +116,7 @@ export default function GalleryForm({ gallery }: { gallery?: AdminGallery }) {
                 <FieldDescription>
                   Dipakai pada tautan album, contoh: manasik-2026.
                 </FieldDescription>
+                <FieldError errors={[{ message: errorOf("slug") }]} />
               </Field>
 
               <Field data-invalid={Boolean(errors.eventDate)}>
@@ -126,6 +130,7 @@ export default function GalleryForm({ gallery }: { gallery?: AdminGallery }) {
                   required
                   aria-invalid={Boolean(errors.eventDate)}
                 />
+                <FieldError errors={[{ message: errorOf("eventDate") }]} />
               </Field>
             </div>
 
@@ -140,6 +145,7 @@ export default function GalleryForm({ gallery }: { gallery?: AdminGallery }) {
                 required
                 aria-invalid={Boolean(errors.description)}
               />
+              <FieldError errors={[{ message: errorOf("description") }]} />
             </Field>
 
             <Field orientation="horizontal">

@@ -19,9 +19,11 @@ import {
 import {
   Field,
   FieldDescription,
+  FieldError,
   FieldGroup,
   FieldLabel,
 } from "@/components/admin/ui/field";
+import { getFieldError } from "@/components/admin/form-error";
 import { Input } from "@/components/admin/ui/input";
 import {
   Select,
@@ -79,6 +81,7 @@ export default function ServiceForm({ service }: { service?: AdminService }) {
   );
 
   const errors = state.fieldErrors ?? {};
+  const errorOf = (path: string) => getFieldError(errors, path);
 
   function updateRequirement(index: number, value: string) {
     setRequirements((current) =>
@@ -151,6 +154,7 @@ export default function ServiceForm({ service }: { service?: AdminService }) {
                 <FieldDescription>
                   Dipakai di kartu dan chip navigasi.
                 </FieldDescription>
+                <FieldError errors={[{ message: errorOf("shortName") }]} />
               </Field>
 
               <Field data-invalid={Boolean(errors.slug)}>
@@ -169,6 +173,7 @@ export default function ServiceForm({ service }: { service?: AdminService }) {
                 <FieldDescription>
                   Huruf kecil dan tanda hubung. Contoh: pelimpahan-porsi.
                 </FieldDescription>
+                <FieldError errors={[{ message: errorOf("slug") }]} />
               </Field>
 
               <Field data-invalid={Boolean(errors.icon)}>
@@ -191,6 +196,7 @@ export default function ServiceForm({ service }: { service?: AdminService }) {
                   </SelectContent>
                 </Select>
                 <input type="hidden" name="icon" value={icon} />
+                <FieldError errors={[{ message: errorOf("icon") }]} />
               </Field>
             </div>
 
@@ -223,6 +229,7 @@ export default function ServiceForm({ service }: { service?: AdminService }) {
                   required
                   aria-invalid={Boolean(errors.duration)}
                 />
+                <FieldError errors={[{ message: errorOf("duration") }]} />
               </Field>
 
               <Field data-invalid={Boolean(errors.cost)}>
@@ -235,6 +242,7 @@ export default function ServiceForm({ service }: { service?: AdminService }) {
                   required
                   aria-invalid={Boolean(errors.cost)}
                 />
+                <FieldError errors={[{ message: errorOf("cost") }]} />
               </Field>
             </div>
 
@@ -250,6 +258,7 @@ export default function ServiceForm({ service }: { service?: AdminService }) {
               <FieldDescription>
                 Tampil sebagai catatan di akhir halaman layanan.
               </FieldDescription>
+              <FieldError errors={[{ message: errorOf("note") }]} />
             </Field>
 
             <Field orientation="horizontal">
@@ -287,13 +296,19 @@ export default function ServiceForm({ service }: { service?: AdminService }) {
               <span className="mt-2 grid size-7 shrink-0 place-items-center rounded-full bg-muted text-xs font-semibold">
                 {index + 1}
               </span>
-              <Textarea
-                name="requirements"
-                value={item}
-                onChange={(event) => updateRequirement(index, event.target.value)}
-                rows={2}
-                aria-label={`Persyaratan ${index + 1}`}
-              />
+              <div className="flex flex-1 flex-col gap-1">
+                <Textarea
+                  name="requirements"
+                  value={item}
+                  onChange={(event) => updateRequirement(index, event.target.value)}
+                  rows={2}
+                  aria-label={`Persyaratan ${index + 1}`}
+                  aria-invalid={Boolean(errors[`requirements.${index}`])}
+                />
+                <FieldError
+                  errors={[{ message: errors[`requirements.${index}`] }]}
+                />
+              </div>
               <Button
                 type="button"
                 variant="ghost"
@@ -369,6 +384,10 @@ export default function ServiceForm({ service }: { service?: AdminService }) {
                   }
                   placeholder="Judul langkah"
                   aria-label={`Judul langkah ${index + 1}`}
+                  aria-invalid={Boolean(errors[`steps.${index}.title`])}
+                />
+                <FieldError
+                  errors={[{ message: errors[`steps.${index}.title`] }]}
                 />
                 <Textarea
                   name="stepDetail"
@@ -379,6 +398,10 @@ export default function ServiceForm({ service }: { service?: AdminService }) {
                   placeholder="Keterangan langkah"
                   rows={2}
                   aria-label={`Keterangan langkah ${index + 1}`}
+                  aria-invalid={Boolean(errors[`steps.${index}.detail`])}
+                />
+                <FieldError
+                  errors={[{ message: errors[`steps.${index}.detail`] }]}
                 />
               </div>
             </div>

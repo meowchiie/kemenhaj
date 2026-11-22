@@ -18,6 +18,7 @@ import {
 import {
   Field,
   FieldDescription,
+  FieldError,
   FieldGroup,
   FieldLabel,
 } from "@/components/admin/ui/field";
@@ -92,6 +93,7 @@ export default function ProfileForm({
                 Gunakan email dinas yang aktif. Email ini menjadi username
                 login.
               </FieldDescription>
+              <FieldError errors={[{ message: errors.email }]} />
             </Field>
           </FieldGroup>
 

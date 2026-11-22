@@ -19,9 +19,11 @@ import {
 import {
   Field,
   FieldDescription,
+  FieldError,
   FieldGroup,
   FieldLabel,
 } from "@/components/admin/ui/field";
+import { getFieldError } from "@/components/admin/form-error";
 import { Input } from "@/components/admin/ui/input";
 import {
   Select,
@@ -109,6 +111,7 @@ export default function ArticleForm({
   );
 
   const errors = state.fieldErrors ?? {};
+  const errorOf = (path: string) => getFieldError(errors, path);
   const bodyJson = JSON.stringify(toInputBlocks(blocks));
 
   function updateBlock(index: number, patch: Partial<UiBlock>) {
@@ -180,6 +183,7 @@ export default function ArticleForm({
                 <FieldDescription>
                   Huruf kecil dan tanda hubung. Contoh: kuota-haji-2027.
                 </FieldDescription>
+                <FieldError errors={[{ message: errorOf("slug") }]} />
               </Field>
 
               <Field data-invalid={Boolean(errors.category)}>
@@ -202,6 +206,7 @@ export default function ArticleForm({
                   </SelectContent>
                 </Select>
                 <input type="hidden" name="category" value={category} />
+                <FieldError errors={[{ message: errorOf("category") }]} />
               </Field>
             </div>
 
@@ -219,6 +224,7 @@ export default function ArticleForm({
               <FieldDescription>
                 Tampil di kartu berita dan hasil pencarian.
               </FieldDescription>
+              <FieldError errors={[{ message: errorOf("excerpt") }]} />
             </Field>
 
             <div className="grid gap-5 sm:grid-cols-3">
@@ -232,6 +238,7 @@ export default function ArticleForm({
                   required
                   aria-invalid={Boolean(errors.author)}
                 />
+                <FieldError errors={[{ message: errorOf("author") }]} />
               </Field>
 
               <Field data-invalid={Boolean(errors.publishedAt)}>
@@ -245,6 +252,7 @@ export default function ArticleForm({
                   required
                   aria-invalid={Boolean(errors.publishedAt)}
                 />
+                <FieldError errors={[{ message: errorOf("publishedAt") }]} />
               </Field>
 
               <Field orientation="horizontal" className="items-center">
@@ -339,6 +347,10 @@ export default function ArticleForm({
                       : "Tulis isi di sini"
                 }
                 aria-label={`Isi blok ${index + 1}`}
+                aria-invalid={Boolean(errors[`body.${index}.text`])}
+              />
+              <FieldError
+                errors={[{ message: errors[`body.${index}.text`] }]}
               />
             </div>
           ))}
